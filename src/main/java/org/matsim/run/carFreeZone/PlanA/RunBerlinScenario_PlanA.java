@@ -102,8 +102,8 @@ public final class RunBerlinScenario_PlanA {
 
 		//******changes in PlanA_Version1******
 		//setLastIteration
-		config.controler().setLastIteration(100);
-		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
+		//config.controler().setLastIteration(100);
+		//config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 		//******changes in PlanA_Version1******//
 
 		Scenario scenario = prepareScenario( config ) ;
