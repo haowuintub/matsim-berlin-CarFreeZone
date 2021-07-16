@@ -74,8 +74,8 @@ public class RunBerlinModeAnalysis {
         directory.mkdirs();
 
         analysis.writeModeShares(outputDirectory);
-        analysis.writeTripRouteDistances(outputDirectory);
-        analysis.writeTripEuclideanDistances(outputDirectory);
+        //analysis.writeTripRouteDistances(outputDirectory);
+        //analysis.writeTripEuclideanDistances(outputDirectory);
 
         final List<Tuple<Double, Double>> distanceGroups = new ArrayList<>();
         distanceGroups.add(new Tuple<>(0., 1000.));
@@ -85,7 +85,7 @@ public class RunBerlinModeAnalysis {
         distanceGroups.add(new Tuple<>(10000., 20000.));
         distanceGroups.add(new Tuple<>(20000., 100000.));
         distanceGroups.add(new Tuple<>(100000., 999999999999.));
-        analysis.writeTripRouteDistances(outputDirectory, distanceGroups);
-        analysis.writeTripEuclideanDistances(outputDirectory, distanceGroups);
+        //analysis.writeTripRouteDistances(outputDirectory, distanceGroups);
+        //analysis.writeTripEuclideanDistances(outputDirectory, distanceGroups);
     }
 }
