@@ -1,5 +1,6 @@
 package org.matsim.run.carFreeZone.PlanA;
 
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.population.Activity;
@@ -20,6 +21,8 @@ import java.util.List;
  * @author dziemke
  */
 public class PopulationModifier_PlanA_Version1 {
+    //allAgents
+    public static List<Id> allAgentIDsList = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         // Input and output files
@@ -27,13 +30,14 @@ public class PopulationModifier_PlanA_Version1 {
         String plansOutputFile = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/plans-modified-carInternal.xml.gz";
         //String areaShapeFile = "/Users/haowu/Workspace/QGIS/MATSim_HA2/ColoredStreets/NoCarZone_final.shp";
 
-        String outputFile_ResidentsReader = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/personInternalIDsList.txt";
+        String outputFile_personInternalIDsList = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/personInternalIDsList.txt";
+        String outputFile_allAgentIDsList = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/allAgentIDsList.txt";
 
 
         //******changes in PlanA_Version1******
         //——————Input——————
         String RedStreets = "/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_RedStreets.txt";
-        String RedStreets_Add_Lane = "/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_RedStreets_Add_Lane.txt";
+        //String RedStreets_Add_Lane = "/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_RedStreets_Add_Lane.txt";
         String GreenStreets = "/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_GreenStreets.txt";
         String YellowStreets = "/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_YellowStreets.txt";
         String InternalStreets = "/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_InternalStreets.txt";
@@ -57,7 +61,7 @@ public class PopulationModifier_PlanA_Version1 {
         System.out.println(RedStreetsList);
         System.out.println(RedStreetsList.size());
 
-        // RedStreets_Add_Lane
+/*        // RedStreets_Add_Lane
         BufferedReader bfrRedStreets_Add_Lane = new BufferedReader(new FileReader(RedStreets_Add_Lane));
         ArrayList<String> RedStreets_Add_LaneList = new ArrayList<>();
         while (true){
@@ -69,7 +73,7 @@ public class PopulationModifier_PlanA_Version1 {
         }
         bfrRedStreets_Add_Lane.close();
         System.out.println(RedStreets_Add_LaneList);
-        System.out.println(RedStreets_Add_LaneList.size());
+        System.out.println(RedStreets_Add_LaneList.size());*/
 
         // GreenStreets
         BufferedReader bfrGreenStreets = new BufferedReader(new FileReader(GreenStreets));
@@ -133,6 +137,8 @@ public class PopulationModifier_PlanA_Version1 {
         personInternalLinkList.addAll(InternalStreetsList);
         personInternalLinkList.addAll(YellowStreetsList);
         personInternalLinkList.addAll(RedStreetsList);
+        personInternalLinkList.addAll(GreenStreetsList);
+        personInternalLinkList.addAll(ElongationPedestrianZoneList);
         personInternalLinkList = new ArrayList<String>(new LinkedHashSet<>(personInternalLinkList));
         System.out.println(personInternalLinkList);
         System.out.println(personInternalLinkList.size());
@@ -165,6 +171,9 @@ public class PopulationModifier_PlanA_Version1 {
 
         // Substitute car mode by carInternal mode for people inside relevant area
         for (Person person : scenario.getPopulation().getPersons().values()) {
+            allAgentIDsList.add(person.getId());
+
+
             // for only Residents
             Activity homeActivity = (Activity) person.getPlans().get(0).getPlanElements().get(0);
 
@@ -206,7 +215,7 @@ public class PopulationModifier_PlanA_Version1 {
         //print List as Txt
         //print the AgentIDs of No Car Zone
         // Insert Path to Output File Here!
-        BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile_ResidentsReader));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile_personInternalIDsList));
         // traverses the collection
         for (String s : personInternalIDsList) {
             // write data
@@ -217,6 +226,12 @@ public class PopulationModifier_PlanA_Version1 {
         // release resource
         bw.close();
         //print List as Txt//
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile_allAgentIDsList));
+        allAgentIDsList = new ArrayList<>(new LinkedHashSet<>(allAgentIDsList));
+        for (Id a : allAgentIDsList) {
+            writer.write(a.toString()+ "\n");
+        }
+        writer.close();
 
         // Write modified population to file
         PopulationWriter populationWriter = new PopulationWriter(scenario.getPopulation());

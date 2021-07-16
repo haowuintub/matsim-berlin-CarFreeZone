@@ -91,20 +91,20 @@ public final class RunBerlinScenario_PlanA {
 		if ( args.length==0 ) {
 			//args = new String[] {"scenarios/berlin-v5.5-10pct/input/berlin-v5.5-10pct.config.xml"}  ;
 
-			//******changes in PlanA_Version1******
+			// --- changes in PlanA_Version1 ---
 			//PlanA_Version1
 			args = new String[] {"scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/berlin-v5.5-1pct.config-subpop.xml"}  ;
-			//******changes in PlanA_Version1******//
+			// --- changes in PlanA_Version1 --- //
 
 		}
 
 		Config config = prepareConfig( args ) ;
 
-		//******changes in PlanA_Version1******
+		// --- changes in PlanA_Version1 ---
 		//setLastIteration
 		//config.controler().setLastIteration(100);
 		//config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		//******changes in PlanA_Version1******//
+		// --- changes in PlanA_Version1 --- //
 
 		Scenario scenario = prepareScenario( config ) ;
 		Controler controler = prepareControler( scenario ) ;
@@ -140,16 +140,16 @@ public final class RunBerlinScenario_PlanA {
 			public void install() {
 				addTravelTimeBinding( TransportMode.ride ).to( networkTravelTime() );
 				addTravelDisutilityFactoryBinding( TransportMode.ride ).to( carTravelDisutilityFactoryKey() );
-				//******Dominik******
+				// --- Dominik ---
 				//bind(AnalysisMainModeIdentifier.class).to(OpenBerlinIntermodalPtDrtRouterModeIdentifier.class);
-				//******Dominik******//
+				// --- Dominik --- //
 				
 				//use income-dependent marginal utility of money for scoring
 				bind(ScoringParametersForPerson.class).to(IncomeDependentUtilityOfMoneyPersonScoringParameters.class).in(Singleton.class);
 			}
 		} );
 
-		//******Dominik******
+		// --- Dominik ---
 		// Add new plan strategy module
 		controler.addOverridingModule( new AbstractModule(){
 			@Override
@@ -160,25 +160,25 @@ public final class RunBerlinScenario_PlanA {
 					private Provider<TripRouter> tripRouterProvider;
 					@Inject private GlobalConfigGroup globalConfigGroup;
 					@Inject private ActivityFacilities facilities;
-					//******Hao******
+					// --- Hao ---
 					@Inject private PermissibleModesCalculator permissibleModesCalculator;
-					//******Hao******//
+					// --- Hao --- //
 					@Override public PlanStrategy get() {
 						PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder( new RandomPlanSelector<>() ) ;
 						SubtourModeChoiceConfigGroup modeChoiceConfig = new SubtourModeChoiceConfigGroup() ;
 						modeChoiceConfig.setModes( new String[] {TransportMode.walk, TransportMode.pt, "carInternal", "bicycle"} );
 						modeChoiceConfig.setChainBasedModes( new String[] {"carInternal", "bicycle"});
-						//******Hao******
+						// --- Hao ---
 						//builder.addStrategyModule(new SubtourModeChoice(tripRouterProvider, globalConfigGroup, modeChoiceConfig) );
 						builder.addStrategyModule(new SubtourModeChoice(globalConfigGroup, modeChoiceConfig, permissibleModesCalculator) );
-						//******Hao******//
+						// --- Hao --- //
 						builder.addStrategyModule(new ReRoute(facilities, tripRouterProvider, globalConfigGroup) );
 						return builder.build() ;
 					}
 				} ) ;
 			}
 		} ) ;
-		//******Dominik******//
+		// --- Dominik --- //
 
 		return controler;
 	}
@@ -197,7 +197,7 @@ public final class RunBerlinScenario_PlanA {
 		 */
 		final Scenario scenario = ScenarioUtils.createScenario( config );
 
-		//******Dominik******
+		// --- Dominik ---
 		// Add carInternal vehicle type
 		VehiclesFactory vehiclesFactory = scenario.getVehicles().getFactory();
 		VehicleType carInternalVehicleType = vehiclesFactory.createVehicleType(Id.create("carInternal", VehicleType.class));
@@ -222,7 +222,7 @@ public final class RunBerlinScenario_PlanA {
 				}
 			}
 		}
-		//******Dominik******//
+		// --- Dominik --- //
 
 		BerlinExperimentalConfigGroup berlinCfg = ConfigUtils.addOrGetModule(config, BerlinExperimentalConfigGroup.class);
 		if (berlinCfg.getPopulationDownsampleFactor() != 1.0) {
