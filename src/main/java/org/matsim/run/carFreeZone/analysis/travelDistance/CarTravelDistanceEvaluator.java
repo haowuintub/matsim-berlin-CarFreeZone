@@ -65,7 +65,7 @@ public class CarTravelDistanceEvaluator implements LinkEnterEventHandler, Person
     public void handleEvent(PersonArrivalEvent event) {
         if (this.travelledDistance.containsKey(event.getPersonId())){
             double distance = this.travelledDistance.get(event.getPersonId());
-            this.travelledDistance.remove(event.getPersonId()); //could be one step instead
+            //this.travelledDistance.remove(event.getPersonId()); //could be one step instead
             int distanceInKm = (int) (distance/1000);
             if (distanceInKm>29) {
                 distanceInKm = 29;
@@ -99,12 +99,14 @@ public class CarTravelDistanceEvaluator implements LinkEnterEventHandler, Person
     @Override
     public void handleEvent(PersonLeavesVehicleEvent event) {
         if (this.vehicles2Persons.containsKey(event.getVehicleId())){
-            this.vehicles2Persons.remove(event.getVehicleId());
+            //this.vehicles2Persons.remove(event.getVehicleId());
         }
     }
 
-    public int[] getDistanceDistribution() {
-        return distanceDistribution;
+    //public int[] getDistanceDistribution() {
+    public Map<Id<Person>,Double> getTravelledDistanceMap() {
+        //return distanceDistribution;
+        return travelledDistance;
     }
 
 }
