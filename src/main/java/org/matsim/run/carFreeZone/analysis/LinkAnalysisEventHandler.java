@@ -1,8 +1,14 @@
 package org.matsim.run.carFreeZone.analysis;
 
 import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.events.*;
 import org.matsim.api.core.v01.events.handler.*;
+import org.matsim.api.core.v01.network.Link;
+import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.network.io.MatsimNetworkReader;
+import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.core.utils.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,7 +18,9 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -58,6 +66,7 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
     //Affected Vehicles.
     public static Set<Id> affectedVehicles = new HashSet<>();
     public static double totalDistanceTravelledByAffectedVehicles = 0.0;
+    int sum_affectedVehicles;
 
 
     //Residents.
@@ -202,7 +211,7 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
 
 
         //Now we are going to store all the link distances in the map:
-        File network = new File("scenarios/berlin-v5.5-1pct/input/berlin-v5.5-network.xml.gz");
+/*        File network = new File("scenarios/berlin-v5.5-1pct/input/berlin-v5.5-network.xml.gz");
         Scanner sc = new Scanner(network);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -216,6 +225,12 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
                 Double linkDist = Double.parseDouble(e.getAttribute("length"));
                 distanceOfLinks.put(Id.createLinkId(e.getAttribute("id")), linkDist);
             }
+        }*/
+        Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+        MatsimNetworkReader reader = new MatsimNetworkReader(scenario.getNetwork());
+        reader.readFile("scenarios/berlin-v5.5-1pct/input/berlin-v5.5-network.xml.gz");
+        for(Link link: scenario.getNetwork().getLinks().values()) {
+            distanceOfLinks.put(link.getId(), link.getLength());
         }
     }
 
@@ -229,6 +244,7 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
 
         if(affectedVehicles.contains(vehicle)){
             totalDistanceTravelledByAffectedVehicles += distanceOfLinks.get(link);
+            sum_affectedVehicles++;
         }
 
         if (internalLinks.contains(link)){
@@ -386,83 +402,92 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
 
 
 
-    public void printResults(){
-        System.out.println("***************************************************************");
-        System.out.println("INTERNAL LINKS");
-        System.out.println("Total distance travelled in internal streets: " + totalDistanceTravelledInInternalZone);
-        System.out.println("Total time travelled in internal streets: " + totalTimeSpentInInternalZone);
-        System.out.println("Total number of vehicles going through internal streets: " + vehiclesGoingThroughInternalZone.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("RED LINKS:");
-        System.out.println("Total distance travelled in red streets: " + totalDistanceTravelledInRedLinks);
-        System.out.println("Total time travelled in red streets: " + totalTimeSpentInRedLinks);
-        System.out.println("Total number of vehicles going through red streets: " + vehiclesGoingThroughRedLinks.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("YELLOW LINKS:");
-        System.out.println("Total distance travelled in yellow streets: " + totalDistanceTravelledInYellowLinks);
-        System.out.println("Total time travelled in yellow streets: " + totalTimeSpentInYellowLinks);
-        System.out.println("Total number of vehicles going through yellow streets: " + vehiclesGoingThroughYellowLinks.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("GREEN LINKS:");
-        System.out.println("Total distance travelled in green streets: " + totalDistanceTravelledInGreenLinks);
-        System.out.println("Total time travelled in green streets: " + totalTimeSpentInGreenLinks);
-        System.out.println("Total number of vehicles going through green streets: " + vehiclesGoingThroughGreenLinks.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("ERNST Reuter:");
-        System.out.println("Total distance travelled in Ernst Reuter: " + totalDistanceTravelledInErnstReuter);
-        System.out.println("Total time travelled in Ernst Reuter: " + totalTimeSpentInErnstReuter);
-        System.out.println("Total number of vehicles going through Ernst Reuter: " + vehiclesGoingThroughErnstReuter.size());
+    public void printResults(String outputFile_results) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile_results));
+
+        writer.write("***************************************************************" + "\n");
+        writer.write("INTERNAL LINKS" + "\n");
+        writer.write("Total distance travelled in internal streets: " + totalDistanceTravelledInInternalZone + "\n");
+        writer.write("Total time travelled in internal streets: " + totalTimeSpentInInternalZone + "\n");
+        writer.write("Total number of vehicles going through internal streets: " + vehiclesGoingThroughInternalZone.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("RED LINKS:" + "\n");
+        writer.write("Total distance travelled in red streets: " + totalDistanceTravelledInRedLinks + "\n");
+        writer.write("Total time travelled in red streets: " + totalTimeSpentInRedLinks + "\n");
+        writer.write("Total number of vehicles going through red streets: " + vehiclesGoingThroughRedLinks.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("YELLOW LINKS:" + "\n");
+        writer.write("Total distance travelled in yellow streets: " + totalDistanceTravelledInYellowLinks + "\n");
+        writer.write("Total time travelled in yellow streets: " + totalTimeSpentInYellowLinks + "\n");
+        writer.write("Total number of vehicles going through yellow streets: " + vehiclesGoingThroughYellowLinks.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("GREEN LINKS:" + "\n");
+        writer.write("Total distance travelled in green streets: " + totalDistanceTravelledInGreenLinks + "\n");
+        writer.write("Total time travelled in green streets: " + totalTimeSpentInGreenLinks + "\n");
+        writer.write("Total number of vehicles going through green streets: " + vehiclesGoingThroughGreenLinks.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("ERNST Reuter:" + "\n");
+        writer.write("Total distance travelled in Ernst Reuter: " + totalDistanceTravelledInErnstReuter + "\n");
+        writer.write("Total time travelled in Ernst Reuter: " + totalTimeSpentInErnstReuter + "\n");
+        writer.write("Total number of vehicles going through Ernst Reuter: " + vehiclesGoingThroughErnstReuter.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("\n");
+        writer.write("\n");
 
 
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("AFFECTED VEHICLES:");
-        System.out.println("Number of affected vehicles: " + affectedVehicles.size());
-        System.out.println("Total distance travelled by the affected vehicles: " + totalDistanceTravelledByAffectedVehicles);
-        System.out.println("Average distance travelled by the affected vehicles: " + totalDistanceTravelledByAffectedVehicles/affectedVehicles.size());
-        System.out.println("---------------------------------------------------------------");
+        writer.write("AFFECTED VEHICLES:" + "\n");
+        writer.write("Number of affected vehicles: " + sum_affectedVehicles + "\n");
+        writer.write("Total distance travelled by the affected vehicles: " + totalDistanceTravelledByAffectedVehicles + "\n");
+        writer.write("Average distance travelled by the affected vehicles: " + totalDistanceTravelledByAffectedVehicles/sum_affectedVehicles + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("\n");
+        writer.write("\n");
 
 
-        System.out.println("Residents:");
-        System.out.println("Number of residents: " + residents.size());
-        System.out.println("Total time spent in traffic by the residents: " + totalTimeSpentByResidentsInTraffic);
-        System.out.println("Average time spent in traffic by the residens: " + totalTimeSpentByResidentsInTraffic / residents.size());
-        System.out.println("Number of residents using pt: " + residentsUsingPT.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("Workers:");
-        System.out.println("Number of affected workers: " + workers.size());
-        System.out.println("Total time spent in traffic by the workers: " + totalTimeSpentByWorkersInTraffic);
-        System.out.println("Average time spent in traffic by the workers: " + totalTimeSpentByWorkersInTraffic / workers.size());
-        System.out.println("Number of workers using pt: " + workersUsingPT.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("AgentsDoingEducation:");
-        System.out.println("Number of agentsDoingEducation: " + agentsDoingEducation.size());
-        System.out.println("Total time spent in traffic by the agentsDoingEducation: " + totalTimeSpentByAgentsDoingEducationInTraffic);
-        System.out.println("Average time spent in traffic by the agentsDoingEducation: " + totalTimeSpentByAgentsDoingEducationInTraffic / agentsDoingEducation.size());
-        System.out.println("Number of agentsDoingEducation using pt: " + agentsDoingEducationUsingPT.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("AgentsDoingOtherActivities:");
-        System.out.println("Number of agentsDoingOtherActivities: " + agentsDoingOtherActivities.size());
-        System.out.println("Total time spent in traffic by the agentsDoingOtherActivities: " + totalTimeSpentByAgentsDoingOtherActivitiesInTraffic);
-        System.out.println("Average time spent in traffic by the agentsDoingOtherActivities: " + totalTimeSpentByAgentsDoingOtherActivitiesInTraffic / agentsDoingOtherActivities.size());
-        System.out.println("Number of agentsDoingOtherActivities using pt: " + agentsDoingOtherActivitiesUsingPT.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("AgentsWithoutActivities:");
-        System.out.println("Number of agentsWithoutActivities: " + agentsWithoutActivities.size());
-        System.out.println("Total time spent in traffic by the agentsWithoutActivities: " + totalTimeSpentByAgentsWithoutActivitiesInTraffic);
-        System.out.println("Average time spent in traffic by the agentsWithoutActivities: " + totalTimeSpentByAgentsWithoutActivitiesInTraffic / agentsWithoutActivities.size());
-        System.out.println("Number of agentsWithoutActivities using pt: " + agentsWithoutActivitiesUsingPT.size());
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("NonAffectedAgents:");
-        System.out.println("Number of nonAffectedAgent: " + nonAffectedAgents.size());
-        System.out.println("Total time spent in traffic by the nonAffectedAgents: " + totalTimeSpentByNonAffectedAgentsInTraffic);
-        System.out.println("Average time spent in traffic by the nonAffectedAgents: " + totalTimeSpentByNonAffectedAgentsInTraffic / nonAffectedAgents.size());
-        System.out.println("Number of nonAffectedAgents using pt: " + nonAffectedAgentsUsingPT.size());
-        System.out.println("---------------------------------------------------------------");
+        writer.write("Residents:" + "\n");
+        writer.write("Number of residents: " + residents.size() + "\n");
+        writer.write("Total time spent in traffic by the residents: " + totalTimeSpentByResidentsInTraffic + "\n");
+        writer.write("Average time spent in traffic by the residens: " + totalTimeSpentByResidentsInTraffic / residents.size() + "\n");
+        writer.write("Number of residents using pt: " + residentsUsingPT.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("Workers:" + "\n");
+        writer.write("Number of affected workers: " + workers.size() + "\n");
+        writer.write("Total time spent in traffic by the workers: " + totalTimeSpentByWorkersInTraffic + "\n");
+        writer.write("Average time spent in traffic by the workers: " + totalTimeSpentByWorkersInTraffic / workers.size() + "\n");
+        writer.write("Number of workers using pt: " + workersUsingPT.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("AgentsDoingEducation:" + "\n");
+        writer.write("Number of agentsDoingEducation: " + agentsDoingEducation.size() + "\n");
+        writer.write("Total time spent in traffic by the agentsDoingEducation: " + totalTimeSpentByAgentsDoingEducationInTraffic + "\n");
+        writer.write("Average time spent in traffic by the agentsDoingEducation: " + totalTimeSpentByAgentsDoingEducationInTraffic / agentsDoingEducation.size() + "\n");
+        writer.write("Number of agentsDoingEducation using pt: " + agentsDoingEducationUsingPT.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("AgentsDoingOtherActivities:" + "\n");
+        writer.write("Number of agentsDoingOtherActivities: " + agentsDoingOtherActivities.size() + "\n");
+        writer.write("Total time spent in traffic by the agentsDoingOtherActivities: " + totalTimeSpentByAgentsDoingOtherActivitiesInTraffic + "\n");
+        writer.write("Average time spent in traffic by the agentsDoingOtherActivities: " + totalTimeSpentByAgentsDoingOtherActivitiesInTraffic / agentsDoingOtherActivities.size() + "\n");
+        writer.write("Number of agentsDoingOtherActivities using pt: " + agentsDoingOtherActivitiesUsingPT.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("AgentsWithoutActivities:" + "\n");
+        writer.write("Number of agentsWithoutActivities: " + agentsWithoutActivities.size() + "\n");
+        writer.write("Total time spent in traffic by the agentsWithoutActivities: " + totalTimeSpentByAgentsWithoutActivitiesInTraffic + "\n");
+        writer.write("Average time spent in traffic by the agentsWithoutActivities: " + totalTimeSpentByAgentsWithoutActivitiesInTraffic / agentsWithoutActivities.size() + "\n");
+        writer.write("Number of agentsWithoutActivities using pt: " + agentsWithoutActivitiesUsingPT.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("NonAffectedAgents:" + "\n");
+        writer.write("Number of nonAffectedAgent: " + nonAffectedAgents.size() + "\n");
+        writer.write("Total time spent in traffic by the nonAffectedAgents: " + totalTimeSpentByNonAffectedAgentsInTraffic + "\n");
+        writer.write("Average time spent in traffic by the nonAffectedAgents: " + totalTimeSpentByNonAffectedAgentsInTraffic / nonAffectedAgents.size() + "\n");
+        writer.write("Number of nonAffectedAgents using pt: " + nonAffectedAgentsUsingPT.size() + "\n");
+        writer.write("---------------------------------------------------------------" + "\n");
+        writer.write("\n");
+        writer.write("\n");
 
 
-        System.out.println("OTHER:");
-        System.out.println("Number of agents using pt: " + agentsUsingPt.size());
-        System.out.println("***************************************************************");
+        writer.write("OTHER:" + "\n");
+        writer.write("Number of agents using pt: " + agentsUsingPt.size() + "\n");
+        writer.write("***************************************************************" + "\n");
+
+        writer.close();
     }
-
 }
