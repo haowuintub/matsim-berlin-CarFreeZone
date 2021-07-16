@@ -1,14 +1,8 @@
 package org.matsim.run.carFreeZone.analysis;
 
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.events.ActivityEndEvent;
-import org.matsim.api.core.v01.events.LinkEnterEvent;
-import org.matsim.api.core.v01.events.PersonArrivalEvent;
-import org.matsim.api.core.v01.events.PersonDepartureEvent;
-import org.matsim.api.core.v01.events.handler.ActivityEndEventHandler;
-import org.matsim.api.core.v01.events.handler.LinkEnterEventHandler;
-import org.matsim.api.core.v01.events.handler.PersonArrivalEventHandler;
-import org.matsim.api.core.v01.events.handler.PersonDepartureEventHandler;
+import org.matsim.api.core.v01.events.*;
+import org.matsim.api.core.v01.events.handler.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -22,50 +16,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDepartureEventHandler, PersonArrivalEventHandler, ActivityEndEventHandler {
-    //Affected Vehicles.
-    public static Set<Id> affectedVehicles = new HashSet<>();
-    public static double totalDistanceTravelledByAffectedVehicles = 0.0;
+public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDepartureEventHandler, PersonArrivalEventHandler, PersonLeavesVehicleEventHandler {
 
-
-    //AffectedResidents.
-    public static Set<Id> affectedResidents = new HashSet<>();
-    public static double totalTimeSpentByAffectedResidentsInTraffic = 0.0;
-    public static Map<Id, Double> timeMap_affectedResidents = new HashMap<>();
-    public static Set<Id> affectedResidentsUsingPT = new HashSet<>();
-
-    //Residents.
-    public static Set<Id> residents = new HashSet<>();
-    public static double totalTimeSpentByResidentsInTraffic = 0.0;
-    public static Map<Id, Double> timeMap = new HashMap<>();
-    public static Set<Id> residentsUsingPT = new HashSet<>();
-
-    //NoneResidentsAffectedAgents.
-    public static Set<Id> noneResidentsAffectedAgents = new HashSet<>();
-    public static double totalTimeSpentByNoneResidentsAffectedAgentsInTraffic = 0.0;
-    public static Map<Id, Double> timeMap_noneResidentsAffectedAgents = new HashMap<>();
-    public static Set<Id> noneResidentsAffectedAgentsUsingPT = new HashSet<>();
-
-    //AffectedAgents.
-    public static Set<Id> affectedAgents = new HashSet<>();
-    public static double totalTimeSpentByAffectedAgentsInTraffic = 0.0;
-    public static Map<Id, Double> timeMap_affectedAgents = new HashMap<>();
-    public static Set<Id> affectedAgentsUsingPT = new HashSet<>();
-
-    //OtherAgents.
-    public static Set<Id> otherAgents = new HashSet<>();
-    public static double totalTimeSpentByOtherAgentsInTraffic = 0.0;
-    public static Map<Id, Double> timeMap_otherAgents = new HashMap<>();
-    public static Set<Id> otherAgentsUsingPT = new HashSet<>();
-
-
-    //Modified links
-    public static List<Id> modifiedLinks = new ArrayList<Id>();
-    public static Map<Id, Double> vehicleHasEnteredModifiedZone = new HashMap<Id, Double>();
-    public static double totalTimeSpentInModifiedZone = 0.0;
-    public static double totalDistanceTravelledInModifiedZone = 0.0;
+    //Internal links
+    public static List<Id> internalLinks = new ArrayList<Id>();
+    public static Map<Id, Double> vehicleHasEnteredInternalZone = new HashMap<Id, Double>();
+    public static double totalTimeSpentInInternalZone = 0.0;
+    public static double totalDistanceTravelledInInternalZone = 0.0;
     public static Map<Id, Double> distanceOfLinks = new HashMap<Id, Double>();
-    public static Set<Id> vehiclesGoingThroughModifiedZone = new HashSet();
+    public static Set<Id> vehiclesGoingThroughInternalZone = new HashSet();
 
     //Red Streets
     public static List<Id> redLinks = new ArrayList<Id>();
@@ -81,15 +40,65 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
     public static Set<Id> vehiclesGoingThroughYellowLinks = new HashSet();
     public static Map<Id, Double> vehicleHasEnteredYellowLinks = new HashMap<Id, Double>();
 
-    //Additional (outside the modified zone).
+    //Green Streets
+    public static List<Id> greenLinks = new ArrayList<Id>();
+    public static double totalTimeSpentInGreenLinks = 0.0;
+    public static double totalDistanceTravelledInGreenLinks = 0.0;
+    public static Set<Id> vehiclesGoingThroughGreenLinks = new HashSet();
+    public static Map<Id, Double> vehicleHasEnteredGreenLinks = new HashMap<Id, Double>();
+
+    //Additional.
     public static List<Id> ernstReuterLinks = new ArrayList<Id>();
     public static double totalTimeSpentInErnstReuter = 0.0;
     public static double totalDistanceTravelledInErnstReuter = 0.0;
     public static Set<Id> vehiclesGoingThroughErnstReuter = new HashSet();
     public static Map<Id, Double> vehicleHasEnteredErnstReuter = new HashMap<Id, Double>();
 
+
+    //Affected Vehicles.
+    public static Set<Id> affectedVehicles = new HashSet<>();
+    public static double totalDistanceTravelledByAffectedVehicles = 0.0;
+
+
+    //Residents.
+    public static Set<Id> residents = new HashSet<>();
+    public static double totalTimeSpentByResidentsInTraffic = 0.0;
+    public static Map<Id, Double> timeMap_residents = new HashMap<>();
+    public static Set<Id> residentsUsingPT = new HashSet<>();
+
+    //Workers.
+    public static Set<Id> workers = new HashSet<>();
+    public static double totalTimeSpentByWorkersInTraffic = 0.0;
+    public static Map<Id, Double> timeMap_workers = new HashMap<>();
+    public static Set<Id> workersUsingPT = new HashSet<>();
+
+    //AgentsDoingEducation.
+    public static Set<Id> agentsDoingEducation = new HashSet<>();
+    public static double totalTimeSpentByAgentsDoingEducationInTraffic = 0.0;
+    public static Map<Id, Double> timeMap_agentsDoingEducation = new HashMap<>();
+    public static Set<Id> agentsDoingEducationUsingPT = new HashSet<>();
+
+    //AgentsDoingOtherActivities.
+    public static Set<Id> agentsDoingOtherActivities = new HashSet<>();
+    public static double totalTimeSpentByAgentsDoingOtherActivitiesInTraffic = 0.0;
+    public static Map<Id, Double> timeMap_agentsDoingOtherActivities = new HashMap<>();
+    public static Set<Id> agentsDoingOtherActivitiesUsingPT = new HashSet<>();
+
+    //AgentsWithoutActivities.
+    public static Set<Id> agentsWithoutActivities = new HashSet<>();
+    public static double totalTimeSpentByAgentsWithoutActivitiesInTraffic = 0.0;
+    public static Map<Id, Double> timeMap_agentsWithoutActivities = new HashMap<>();
+    public static Set<Id> agentsWithoutActivitiesUsingPT = new HashSet<>();
+
+    //NonAffectedAgent.
+    public static Set<Id> nonAffectedAgents = new HashSet<>();
+    public static double totalTimeSpentByNonAffectedAgentsInTraffic = 0.0;
+    public static Map<Id, Double> timeMap_nonAffectedAgents = new HashMap<>();
+    public static Set<Id> nonAffectedAgentsUsingPT = new HashSet<>();
+
     //Other
     public static Set<Id> agentsUsingPt = new HashSet<>();
+
 
     public LinkAnalysisEventHandler() throws IOException, ParserConfigurationException, SAXException {
         //Create every link list.
@@ -102,6 +111,15 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
         }
         scanner.close();
 
+        Scanner scanner1 = new Scanner(new File("/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_GreenStreets.txt"));
+        while(scanner1.hasNextLine())
+        {
+            String id = scanner1.nextLine();
+            greenLinks.add(Id.createLinkId(id));
+
+        }
+        scanner1.close();
+
         Scanner scanner2 =  new Scanner(new File("/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_RedStreets.txt"));
         while(scanner2.hasNextLine())
         {
@@ -111,11 +129,11 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
         }
         scanner2.close();
 
-        Scanner scanner3 =  new Scanner(new File("/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/links_Modified_Zone.txt"));
+        Scanner scanner3 =  new Scanner(new File("/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_InternalStreets.txt"));
         while(scanner3.hasNextLine())
         {
             String id = scanner3.nextLine();
-            modifiedLinks.add(Id.createLinkId(id));
+            internalLinks.add(Id.createLinkId(id));
 
         }
         scanner3.close();
@@ -129,51 +147,62 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
         }
         scanner4.close();
 
-        Scanner scanner5 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/Analysis/InputFile_JaviersResults/affected_Vehicles_HA2.txt"));
+
+        Scanner scanner5 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/agentsPassingThroughIDsList.txt"));
         while (scanner5.hasNextLine()){
             String id = scanner5.nextLine();
             affectedVehicles.add(Id.createVehicleId(id));
         }
         scanner5.close();
 
-        Scanner scanner6 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/Analysis/InputFile_JaviersResults/affectedResidentsIDsList.txt"));
+
+        Scanner scanner6 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/workerIDsList.txt"));
         while (scanner6.hasNextLine()){
             String id = scanner6.nextLine();
-            affectedResidents.add(Id.createPersonId(id));
+            workers.add(Id.createPersonId(id));
         }
         scanner6.close();
 
-        Scanner scanner7 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/PlanA/personInternalIDsList.txt"));
+        Scanner scanner7 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/personInternalIDsList.txt"));
         while (scanner7.hasNextLine()){
             String id = scanner7.nextLine();
             residents.add(Id.createPersonId(id));
         }
         scanner7.close();
 
-        Scanner scanner8 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/Analysis/InputFile_JaviersResults/noneResidentsAffectedAgentsIDsList.txt"));
+        Scanner scanner11 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/agentsDoingEducationIDsList.txt"));
+        while (scanner11.hasNextLine()){
+            String id = scanner11.nextLine();
+            agentsDoingEducation.add(Id.createPersonId(id));
+        }
+        scanner11.close();
+
+        Scanner scanner8 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/agentsDoingOtherActivitiesIDsList.txt"));
         while (scanner8.hasNextLine()){
             String id = scanner8.nextLine();
-            noneResidentsAffectedAgents.add(Id.createPersonId(id));
+            agentsDoingOtherActivities.add(Id.createPersonId(id));
         }
         scanner8.close();
 
-        Scanner scanner9 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/Analysis/InputFile_JaviersResults/affectedAgentsIDsList.txt"));
+        Scanner scanner9 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/agentsWithoutActivitiesIDsList.txt"));
         while (scanner9.hasNextLine()){
             String id = scanner9.nextLine();
-            affectedAgents.add(Id.createPersonId(id));
+            agentsWithoutActivities.add(Id.createPersonId(id));
         }
         scanner9.close();
 
-        Scanner scanner10 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/Analysis/InputFile_JaviersResults/otherAgentsIDsList.txt"));
+        Scanner scanner10 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/nonAffectedAgentsIDsList.txt"));
         while (scanner10.hasNextLine()){
             String id = scanner10.nextLine();
-            otherAgents.add(Id.createPersonId(id));
+            nonAffectedAgents.add(Id.createPersonId(id));
         }
         scanner10.close();
 
 
+
+
         //Now we are going to store all the link distances in the map:
-        File network = new File("scenarios/berlin-v5.5-1pct/input/berlin-v5.5-network.xml");
+        File network = new File("scenarios/berlin-v5.5-1pct/input/berlin-v5.5-network.xml.gz");
         Scanner sc = new Scanner(network);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -190,6 +219,9 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
         }
     }
 
+
+
+
     @Override
     public void handleEvent(LinkEnterEvent event){
         Id link = event.getLinkId();
@@ -199,20 +231,20 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
             totalDistanceTravelledByAffectedVehicles += distanceOfLinks.get(link);
         }
 
-        if (modifiedLinks.contains(link)){
-            //Add vehicle to the set of vehicles going through the modified zone.
-            vehiclesGoingThroughModifiedZone.add(event.getVehicleId());
+        if (internalLinks.contains(link)){
+            //Add vehicle to the set of vehicles going through the internal streets.
+            vehiclesGoingThroughInternalZone.add(event.getVehicleId());
             //Add the link's distance to the total distance travelled counter.
-            totalDistanceTravelledInModifiedZone += distanceOfLinks.get(event.getLinkId());
+            totalDistanceTravelledInInternalZone += distanceOfLinks.get(event.getLinkId());
             //Vehicle enters for the first time in our zone, so we record the time.
-            vehicleHasEnteredModifiedZone.putIfAbsent(vehicle, event.getTime());
+            vehicleHasEnteredInternalZone.putIfAbsent(vehicle, event.getTime());
         }else{
-            if (vehicleHasEnteredModifiedZone.containsKey(vehicle)){
-                //Vehicle is leaving the modified zone, we add the time spent in traffic to the counter.
+            if (vehicleHasEnteredInternalZone.containsKey(vehicle)){
+                //Vehicle is leaving the internal streets, we add the time spent in traffic to the counter.
                 Double currentTime = event.getTime();
-                totalTimeSpentInModifiedZone += (currentTime-vehicleHasEnteredModifiedZone.get(vehicle));
+                totalTimeSpentInInternalZone += (currentTime-vehicleHasEnteredInternalZone.get(vehicle));
                 //Vehicle's id removed from the map so that next time it enters zone the time is stored.
-                vehicleHasEnteredModifiedZone.remove(vehicle);
+                vehicleHasEnteredInternalZone.remove(vehicle);
             }
         }
 
@@ -250,6 +282,23 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
             }
         }
 
+        if (greenLinks.contains(link)){
+            //Add vehicle to the set of vehicles going through the green links.
+            vehiclesGoingThroughGreenLinks.add(event.getVehicleId());
+            //Add the link's distance to the total distance travelled counter.
+            totalDistanceTravelledInGreenLinks += distanceOfLinks.get(event.getLinkId());
+            //Vehicle enters for the first time in the green links, so we record the time.
+            vehicleHasEnteredGreenLinks.putIfAbsent(vehicle, event.getTime());
+        }else{
+            if (vehicleHasEnteredGreenLinks.containsKey(vehicle)){
+                //Vehicle is leaving the green links, we add the time spent in traffic to the counter.
+                Double currentTime = event.getTime();
+                totalTimeSpentInGreenLinks += (currentTime-vehicleHasEnteredGreenLinks.get(vehicle));
+                //Vehicle's id removed from the map so that next time it enters zone the time is stored.
+                vehicleHasEnteredGreenLinks.remove(vehicle);
+            }
+        }
+
         if (ernstReuterLinks.contains(link)){
             //Add vehicle to the set of vehicles going through the Ernst Reuter.
             vehiclesGoingThroughErnstReuter.add(event.getVehicleId());
@@ -273,92 +322,99 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
     public void handleEvent(PersonDepartureEvent event){
         Id person = event.getPersonId();
         if(residents.contains(person)){
-            timeMap.putIfAbsent(person, event.getTime());
-        } else if(noneResidentsAffectedAgents.contains(person)) {
-            timeMap_noneResidentsAffectedAgents.putIfAbsent(person, event.getTime());
-        } else if(otherAgents.contains(person)){
-            timeMap_otherAgents.putIfAbsent(person, event.getTime());
-        }
-
-        if(affectedResidents.contains(person)){
-            timeMap_affectedResidents.putIfAbsent(person, event.getTime());
-        }
-        if(affectedAgents.contains(person)){
-            timeMap_affectedAgents.putIfAbsent(person, event.getTime());
+            timeMap_residents.putIfAbsent(person, event.getTime());
+        } else if(workers.contains(person)){
+            timeMap_workers.putIfAbsent(person, event.getTime());
+        } else if(agentsDoingEducation.contains(person)) {
+            timeMap_agentsDoingEducation.putIfAbsent(person, event.getTime());
+        } else if(agentsDoingOtherActivities.contains(person)) {
+            timeMap_agentsDoingOtherActivities.putIfAbsent(person, event.getTime());
+        } else if(agentsWithoutActivities.contains(person)){
+            timeMap_agentsWithoutActivities.putIfAbsent(person, event.getTime());
+        } else if(nonAffectedAgents.contains(person)){
+            timeMap_nonAffectedAgents.putIfAbsent(person, event.getTime());
         }
     }
 
     @Override
     public void handleEvent(PersonArrivalEvent event){
         Id person = event.getPersonId();
-        if(timeMap.containsKey(person)){
-            totalTimeSpentByResidentsInTraffic += (event.getTime()-timeMap.get(person));
-            timeMap.remove(person);
-        }else if(timeMap_noneResidentsAffectedAgents.containsKey(person)){
-            totalTimeSpentByNoneResidentsAffectedAgentsInTraffic += (event.getTime()-timeMap_noneResidentsAffectedAgents.get(person));
-            timeMap_noneResidentsAffectedAgents.remove(person);
-        }else if(timeMap_otherAgents.containsKey(person)){
-            totalTimeSpentByOtherAgentsInTraffic += (event.getTime()-timeMap_otherAgents.get(person));
-            timeMap_otherAgents.remove(person);
-        }
-
-        if(timeMap_affectedResidents.containsKey(person)){
-            totalTimeSpentByAffectedResidentsInTraffic += (event.getTime()-timeMap_affectedResidents.get(person));
-            timeMap_affectedResidents.remove(person);
-        }
-        if(timeMap_affectedAgents.containsKey(person)){
-            totalTimeSpentByAffectedAgentsInTraffic += (event.getTime()-timeMap_affectedAgents.get(person));
-            timeMap_affectedAgents.remove(person);
+        if(timeMap_residents.containsKey(person)){
+            totalTimeSpentByResidentsInTraffic += (event.getTime()- timeMap_residents.get(person));
+            timeMap_residents.remove(person);
+        } else if(timeMap_workers.containsKey(person)){
+            totalTimeSpentByWorkersInTraffic += (event.getTime()- timeMap_workers.get(person));
+            timeMap_workers.remove(person);
+        } else if(timeMap_agentsDoingEducation.containsKey(person)){
+            totalTimeSpentByAgentsDoingEducationInTraffic += (event.getTime()- timeMap_agentsDoingEducation.get(person));
+            timeMap_agentsDoingEducation.remove(person);
+        } else if(timeMap_agentsDoingOtherActivities.containsKey(person)){
+            totalTimeSpentByAgentsDoingOtherActivitiesInTraffic += (event.getTime()- timeMap_agentsDoingOtherActivities.get(person));
+            timeMap_agentsDoingOtherActivities.remove(person);
+        } else if(timeMap_agentsWithoutActivities.containsKey(person)){
+            totalTimeSpentByAgentsWithoutActivitiesInTraffic += (event.getTime()- timeMap_agentsWithoutActivities.get(person));
+            timeMap_agentsWithoutActivities.remove(person);
+        } else if(timeMap_nonAffectedAgents.containsKey(person)){
+            totalTimeSpentByNonAffectedAgentsInTraffic += (event.getTime()- timeMap_nonAffectedAgents.get(person));
+            timeMap_nonAffectedAgents.remove(person);
         }
     }
 
     @Override
-    public void handleEvent(ActivityEndEvent event){
-        String activityType = event.getActType();
+    public void handleEvent(PersonLeavesVehicleEvent event){
+        //String activityType = event.getActType();
         Id person = event.getPersonId();
-        if (activityType.equals("pt interaction")){
+        if (event.getVehicleId().toString().contains("pt")){
             if(residents.contains(person)){
                 residentsUsingPT.add(person);
-            }else if(noneResidentsAffectedAgents.contains(person)){
-                noneResidentsAffectedAgentsUsingPT.add(person);
-            }else if(otherAgents.contains(person)){
-                otherAgentsUsingPT.add(person);
+            } else if(workers.contains(person)){
+                workersUsingPT.add(person);
+            } else if(agentsDoingEducation.contains(person)){
+                agentsDoingEducationUsingPT.add(person);
+            } else if(agentsDoingOtherActivities.contains(person)){
+                agentsDoingOtherActivitiesUsingPT.add(person);
+            } else if(agentsWithoutActivities.contains(person)){
+                agentsWithoutActivitiesUsingPT.add(person);
+            } else if(nonAffectedAgents.contains(person)){
+                nonAffectedAgentsUsingPT.add(person);
             }
-
-            if(affectedResidents.contains(person)){
-                affectedResidentsUsingPT.add(person);
-            }
-            if(affectedAgents.contains(person)){
-                affectedAgentsUsingPT.add(person);
-            }
-
             agentsUsingPt.add(person);
         }
     }
 
+
+
+
+
     public void printResults(){
         System.out.println("***************************************************************");
-        System.out.println("MODIFIED ZONE");
-        System.out.println("Total distance travelled in modified zones: " + totalDistanceTravelledInModifiedZone);
-        System.out.println("Total time travelled in modified zones: " + totalTimeSpentInModifiedZone);
-        System.out.println("Total number of vehicles going through modified zones: " + vehiclesGoingThroughModifiedZone.size());
+        System.out.println("INTERNAL LINKS");
+        System.out.println("Total distance travelled in internal streets: " + totalDistanceTravelledInInternalZone);
+        System.out.println("Total time travelled in internal streets: " + totalTimeSpentInInternalZone);
+        System.out.println("Total number of vehicles going through internal streets: " + vehiclesGoingThroughInternalZone.size());
         System.out.println("---------------------------------------------------------------");
         System.out.println("RED LINKS:");
-        System.out.println("Total distance travelled in modified zones: " + totalDistanceTravelledInRedLinks);
-        System.out.println("Total time travelled in modified zones: " + totalTimeSpentInRedLinks);
-        System.out.println("Total number of vehicles going through modified zones: " + vehiclesGoingThroughRedLinks.size());
+        System.out.println("Total distance travelled in red streets: " + totalDistanceTravelledInRedLinks);
+        System.out.println("Total time travelled in red streets: " + totalTimeSpentInRedLinks);
+        System.out.println("Total number of vehicles going through red streets: " + vehiclesGoingThroughRedLinks.size());
         System.out.println("---------------------------------------------------------------");
         System.out.println("YELLOW LINKS:");
-        System.out.println("Total distance travelled in modified zones: " + totalDistanceTravelledInYellowLinks);
-        System.out.println("Total time travelled in modified zones: " + totalTimeSpentInYellowLinks);
-        System.out.println("Total number of vehicles going through modified zones: " + vehiclesGoingThroughYellowLinks.size());
+        System.out.println("Total distance travelled in yellow streets: " + totalDistanceTravelledInYellowLinks);
+        System.out.println("Total time travelled in yellow streets: " + totalTimeSpentInYellowLinks);
+        System.out.println("Total number of vehicles going through yellow streets: " + vehiclesGoingThroughYellowLinks.size());
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("GREEN LINKS:");
+        System.out.println("Total distance travelled in green streets: " + totalDistanceTravelledInGreenLinks);
+        System.out.println("Total time travelled in green streets: " + totalTimeSpentInGreenLinks);
+        System.out.println("Total number of vehicles going through green streets: " + vehiclesGoingThroughGreenLinks.size());
         System.out.println("---------------------------------------------------------------");
         System.out.println("ERNST Reuter:");
         System.out.println("Total distance travelled in Ernst Reuter: " + totalDistanceTravelledInErnstReuter);
         System.out.println("Total time travelled in Ernst Reuter: " + totalTimeSpentInErnstReuter);
         System.out.println("Total number of vehicles going through Ernst Reuter: " + vehiclesGoingThroughErnstReuter.size());
-        System.out.println("---------------------------------------------------------------");
 
+
+        System.out.println("---------------------------------------------------------------");
         System.out.println("AFFECTED VEHICLES:");
         System.out.println("Number of affected vehicles: " + affectedVehicles.size());
         System.out.println("Total distance travelled by the affected vehicles: " + totalDistanceTravelledByAffectedVehicles);
@@ -366,41 +422,47 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
         System.out.println("---------------------------------------------------------------");
 
 
-        System.out.println("AffectedResidents:");
-        System.out.println("Number of affected residents: " + affectedResidents.size());
-        System.out.println("Total time spent in traffic by the affected residents: " + totalTimeSpentByAffectedResidentsInTraffic);
-        System.out.println("Average time spent in traffic by the affected residens: " + totalTimeSpentByAffectedResidentsInTraffic / affectedResidents.size());
-        System.out.println("Number of affected residents using pt: " + affectedResidentsUsingPT.size());
-        System.out.println("---------------------------------------------------------------");
         System.out.println("Residents:");
         System.out.println("Number of residents: " + residents.size());
         System.out.println("Total time spent in traffic by the residents: " + totalTimeSpentByResidentsInTraffic);
         System.out.println("Average time spent in traffic by the residens: " + totalTimeSpentByResidentsInTraffic / residents.size());
         System.out.println("Number of residents using pt: " + residentsUsingPT.size());
         System.out.println("---------------------------------------------------------------");
-        System.out.println("NoneResidentsAffectedAgents:");
-        System.out.println("Number of none-resident affected agents: " + noneResidentsAffectedAgents.size());
-        System.out.println("Total time spent in traffic by the none-resident affected agents: " + totalTimeSpentByNoneResidentsAffectedAgentsInTraffic);
-        System.out.println("Average time spent in traffic by the none-resident affected agents: " + totalTimeSpentByNoneResidentsAffectedAgentsInTraffic / noneResidentsAffectedAgents.size());
-        System.out.println("Number of none-resident affected agents using pt: " + noneResidentsAffectedAgentsUsingPT.size());
+        System.out.println("Workers:");
+        System.out.println("Number of affected workers: " + workers.size());
+        System.out.println("Total time spent in traffic by the workers: " + totalTimeSpentByWorkersInTraffic);
+        System.out.println("Average time spent in traffic by the workers: " + totalTimeSpentByWorkersInTraffic / workers.size());
+        System.out.println("Number of workers using pt: " + workersUsingPT.size());
         System.out.println("---------------------------------------------------------------");
-        System.out.println("AffectedAgents:");
-        System.out.println("Number of affected agents: " + affectedAgents.size());
-        System.out.println("Total time spent in traffic by the affected agents: " + totalTimeSpentByAffectedAgentsInTraffic);
-        System.out.println("Average time spent in traffic by the affected agents: " + totalTimeSpentByAffectedAgentsInTraffic / affectedAgents.size());
-        System.out.println("Number of affected agents using pt: " + affectedAgentsUsingPT.size());
+        System.out.println("AgentsDoingEducation:");
+        System.out.println("Number of agentsDoingEducation: " + agentsDoingEducation.size());
+        System.out.println("Total time spent in traffic by the agentsDoingEducation: " + totalTimeSpentByAgentsDoingEducationInTraffic);
+        System.out.println("Average time spent in traffic by the agentsDoingEducation: " + totalTimeSpentByAgentsDoingEducationInTraffic / agentsDoingEducation.size());
+        System.out.println("Number of agentsDoingEducation using pt: " + agentsDoingEducationUsingPT.size());
         System.out.println("---------------------------------------------------------------");
-        System.out.println("OtherAgents:");
-        System.out.println("Number of other agents: " + otherAgents.size());
-        System.out.println("Total time spent in traffic by the other agents: " + totalTimeSpentByOtherAgentsInTraffic);
-        System.out.println("Average time spent in traffic by the other agents: " + totalTimeSpentByOtherAgentsInTraffic / otherAgents.size());
-        System.out.println("Number of other agents using pt: " + otherAgentsUsingPT.size());
+        System.out.println("AgentsDoingOtherActivities:");
+        System.out.println("Number of agentsDoingOtherActivities: " + agentsDoingOtherActivities.size());
+        System.out.println("Total time spent in traffic by the agentsDoingOtherActivities: " + totalTimeSpentByAgentsDoingOtherActivitiesInTraffic);
+        System.out.println("Average time spent in traffic by the agentsDoingOtherActivities: " + totalTimeSpentByAgentsDoingOtherActivitiesInTraffic / agentsDoingOtherActivities.size());
+        System.out.println("Number of agentsDoingOtherActivities using pt: " + agentsDoingOtherActivitiesUsingPT.size());
         System.out.println("---------------------------------------------------------------");
+        System.out.println("AgentsWithoutActivities:");
+        System.out.println("Number of agentsWithoutActivities: " + agentsWithoutActivities.size());
+        System.out.println("Total time spent in traffic by the agentsWithoutActivities: " + totalTimeSpentByAgentsWithoutActivitiesInTraffic);
+        System.out.println("Average time spent in traffic by the agentsWithoutActivities: " + totalTimeSpentByAgentsWithoutActivitiesInTraffic / agentsWithoutActivities.size());
+        System.out.println("Number of agentsWithoutActivities using pt: " + agentsWithoutActivitiesUsingPT.size());
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("NonAffectedAgents:");
+        System.out.println("Number of nonAffectedAgent: " + nonAffectedAgents.size());
+        System.out.println("Total time spent in traffic by the nonAffectedAgents: " + totalTimeSpentByNonAffectedAgentsInTraffic);
+        System.out.println("Average time spent in traffic by the nonAffectedAgents: " + totalTimeSpentByNonAffectedAgentsInTraffic / nonAffectedAgents.size());
+        System.out.println("Number of nonAffectedAgents using pt: " + nonAffectedAgentsUsingPT.size());
+        System.out.println("---------------------------------------------------------------");
+
 
         System.out.println("OTHER:");
         System.out.println("Number of agents using pt: " + agentsUsingPt.size());
         System.out.println("***************************************************************");
     }
-
 
 }

@@ -191,7 +191,7 @@ public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, Ac
         }
     }
 
-    public void printResults(String outputFile_personInternalLinkIDsList, String outputFile_workerIDsList, String outputFile_agentsDoingEducationIDsList, String outputFile_agentsDoingOtherActivitiesIDsList, String outputFile_agentsWithoutActivitiesIDsList, String outputFile_nonAffectedAgentIDsList) throws IOException {
+    public void printResults(String outputFile_personInternalLinkIDsList, String outputFile_workerIDsList, String outputFile_agentsDoingEducationIDsList, String outputFile_agentsDoingOtherActivitiesIDsList, String outputFile_agentsWithoutActivitiesIDsList, String outputFile_nonAffectedAgentIDsList, String outputFile_agentsPassingThroughIDsList) throws IOException {
         BufferedWriter writer1 = new BufferedWriter(new FileWriter(outputFile_personInternalLinkIDsList));
         for (String a : personInternalLinkIDsList) {
             writer1.write(a+ "\n");
@@ -249,7 +249,11 @@ public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, Ac
         }
         writer5.close();
 
-        //agentsDoingOtherActivitiesIDsList
-        //agentsPassingThroughIDsList
+        BufferedWriter writer6 = new BufferedWriter(new FileWriter(outputFile_agentsPassingThroughIDsList));
+        agentsPassingThroughIDsList = new ArrayList<>(new LinkedHashSet<>(agentsPassingThroughIDsList));
+        for (String a : agentsPassingThroughIDsList) {
+            writer6.write(a+ "\n");
+        }
+        writer6.close();
     }
 }
