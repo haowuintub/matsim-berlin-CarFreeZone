@@ -146,26 +146,19 @@ public class ModalSplit {
                         Leg leg = (Leg) pe;
                         if (leg.getMode().equals("carInternal")) {
                             agentGroup.carInternalCounter++;
-                            agentGroup.carInternalCounter++;
                         } else if (leg.getMode().equals(TransportMode.car)) {
-                            agentGroup.carCounter++;
                             agentGroup.carCounter++;
                         } else if (leg.getMode().equals("freight")) {
                             //agentGroup.freightCounter++;
-                            //agentGroup.freightCounter++;
                         } else if (leg.getMode().equals(TransportMode.ride)) {
                             agentGroup.rideCounter++;
-                            agentGroup.rideCounter++;
                         } else if (leg.getMode().equals("bicycle")) {
-                            agentGroup.bicycleCounter++;
                             agentGroup.bicycleCounter++;
                         } else if (leg.getMode().equals(TransportMode.walk)) {
                             if(leg.getAttributes().getAttribute("routingMode").equals("walk")) {
                                 agentGroup.walkCounter++;
-                                agentGroup.walkCounter++;
                             }
                         } else if (leg.getMode().equals(TransportMode.pt)) {
-                            agentGroup.ptCounter++;
                             agentGroup.ptCounter++;
                         } else {
                             throw new RuntimeException("there are not only mode 'car, carInternal, freight, ride, bicycle, walk, pt', but also something else mode! ");
