@@ -53,6 +53,7 @@ public class RunBerlinModeAnalysis {
 
     //Allagents.
     public static Set<Id> allAgents = new HashSet<>();
+    public static Set<Id> allAgents_freight = new HashSet<>();
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -127,7 +128,14 @@ public class RunBerlinModeAnalysis {
         config.facilities().setInputFile(null);
         Scenario scenario = ScenarioUtils.loadScenario(config);
         for(Person person :scenario.getPopulation().getPersons().values()){
-            allAgents.add(Id.createPersonId(person.getId().toString()));
+            if(!person.getId().toString().contains("freight")){
+                allAgents.add(Id.createPersonId(person.getId().toString()));
+            } else{
+                allAgents_freight.add(Id.createPersonId(person.getId().toString()));
+            }
+        }
+        for (Id<Person> personId: allAgents_freight) {
+                scenario.getPopulation().removePerson(personId);
         }
         
         Scenario scenario1 = ScenarioUtils.loadScenario(config);
