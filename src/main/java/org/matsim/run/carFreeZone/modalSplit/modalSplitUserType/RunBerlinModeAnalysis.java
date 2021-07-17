@@ -60,7 +60,7 @@ public class RunBerlinModeAnalysis {
         final String runId = "berlin-v5.5-1pct";
         final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/";
 
-        String outputDirectory = runDirectory + "/analysis/validation/";
+        String outputDirectory = runDirectory + "/analysis/modalSplit/";
         String outputDirectory_;
         String outputDirectory1;
         String outputDirectory2;
@@ -130,7 +130,7 @@ public class RunBerlinModeAnalysis {
         for(Person person :scenario.getPopulation().getPersons().values()){
             allAgents.add(Id.createPersonId(person.getId().toString()));
         }
-
+        
         Scenario scenario1 = ScenarioUtils.loadScenario(config);
         for (Id<Person> personId: allAgents) {
             if(!residents.contains(personId)){
@@ -172,7 +172,7 @@ public class RunBerlinModeAnalysis {
                 scenario6.getPopulation().removePerson(personId);
             }
         }
-
+        
 
 /*        AgentAnalysisFilter filter = new AgentAnalysisFilter("A");
 
@@ -185,8 +185,8 @@ public class RunBerlinModeAnalysis {
 		filter.setRelevantActivityType("home");
 
         filter.preProcess(scenario);*/
-
-
+        
+        
         //allagents
         ModeAnalysis analysis = new ModeAnalysis(scenario, null, null, new DefaultAnalysisMainModeIdentifier());
         analysis.run();
@@ -256,7 +256,7 @@ public class RunBerlinModeAnalysis {
 
         outputDirectory6 = outputDirectory + "nonAffectedAgents.";
         analysis6.writeModeShares(outputDirectory6);
-        
+
 
         System.out.println(scenario.getPopulation().getPersons().size());
         System.out.println(scenario1.getPopulation().getPersons().size());
