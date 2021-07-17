@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 import org.matsim.analysis.AgentAnalysisFilter;
-import org.matsim.analysis.DefaultAnalysisMainModeIdentifier;
 import org.matsim.analysis.modalSplitUserType.ModeAnalysis;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -58,7 +57,7 @@ public class RunBerlinModeAnalysis {
     public static void main(String[] args) throws FileNotFoundException {
 
         final String runId = "berlin-v5.5-1pct";
-        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/";
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase1_200/";
 
         String outputDirectory = runDirectory + "/analysis/modalSplit/";
         String outputDirectory_;
@@ -188,7 +187,7 @@ public class RunBerlinModeAnalysis {
         
         
         //allagents
-        ModeAnalysis analysis = new ModeAnalysis(scenario, null, null, new DefaultAnalysisMainModeIdentifier());
+        ModeAnalysis analysis = new ModeAnalysis(scenario, null, null, new DefaultAnalysisMainModeIdentifierWithCarInternal());
         analysis.run();
 
         File directory = new File(outputDirectory);
@@ -198,7 +197,7 @@ public class RunBerlinModeAnalysis {
         analysis.writeModeShares(outputDirectory_);
 
         //residents
-        ModeAnalysis analysis1 = new ModeAnalysis(scenario1, null, null, new DefaultAnalysisMainModeIdentifier());
+        ModeAnalysis analysis1 = new ModeAnalysis(scenario1, null, null, new DefaultAnalysisMainModeIdentifierWithCarInternal());
         analysis1.run();
 
         File directory1 = new File(outputDirectory);
@@ -208,7 +207,7 @@ public class RunBerlinModeAnalysis {
         analysis1.writeModeShares(outputDirectory1);
 
         //workers
-        ModeAnalysis analysis2 = new ModeAnalysis(scenario2, null, null, new DefaultAnalysisMainModeIdentifier());
+        ModeAnalysis analysis2 = new ModeAnalysis(scenario2, null, null, new DefaultAnalysisMainModeIdentifierWithCarInternal());
         analysis2.run();
 
         File directory2 = new File(outputDirectory);
@@ -218,7 +217,7 @@ public class RunBerlinModeAnalysis {
         analysis2.writeModeShares(outputDirectory2);
 
         //agentsDoingEducation
-        ModeAnalysis analysis3 = new ModeAnalysis(scenario3, null, null, new DefaultAnalysisMainModeIdentifier());
+        ModeAnalysis analysis3 = new ModeAnalysis(scenario3, null, null, new DefaultAnalysisMainModeIdentifierWithCarInternal());
         analysis3.run();
 
         File directory3 = new File(outputDirectory);
@@ -228,7 +227,7 @@ public class RunBerlinModeAnalysis {
         analysis3.writeModeShares(outputDirectory3);
 
         //agentsDoingOtherActivities
-        ModeAnalysis analysis4 = new ModeAnalysis(scenario4, null, null, new DefaultAnalysisMainModeIdentifier());
+        ModeAnalysis analysis4 = new ModeAnalysis(scenario4, null, null, new DefaultAnalysisMainModeIdentifierWithCarInternal());
         analysis4.run();
 
         File directory4 = new File(outputDirectory);
@@ -238,7 +237,7 @@ public class RunBerlinModeAnalysis {
         analysis4.writeModeShares(outputDirectory4);
 
         //agentsWithoutActivities
-        ModeAnalysis analysis5 = new ModeAnalysis(scenario5, null, null, new DefaultAnalysisMainModeIdentifier());
+        ModeAnalysis analysis5 = new ModeAnalysis(scenario5, null, null, new DefaultAnalysisMainModeIdentifierWithCarInternal());
         analysis5.run();
 
         File directory5 = new File(outputDirectory);
@@ -248,7 +247,7 @@ public class RunBerlinModeAnalysis {
         analysis5.writeModeShares(outputDirectory5);
 
         //nonAffectedAgents
-        ModeAnalysis analysis6 = new ModeAnalysis(scenario6, null, null, new DefaultAnalysisMainModeIdentifier());
+        ModeAnalysis analysis6 = new ModeAnalysis(scenario6, null, null, new DefaultAnalysisMainModeIdentifierWithCarInternal());
         analysis6.run();
 
         File directory6 = new File(outputDirectory);

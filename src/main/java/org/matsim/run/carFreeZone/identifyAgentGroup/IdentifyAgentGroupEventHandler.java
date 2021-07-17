@@ -175,7 +175,10 @@ public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, Ac
 
             }else{
                 //ActivityTypes: LEISURE, SHOPPING, OTHER
-                agentsDoingOtherActivitiesIDsList.add(event.getPersonId().toString());
+                if(!event.getPersonId().toString().contains("freight")){
+                    agentsDoingOtherActivitiesIDsList.add(event.getPersonId().toString());
+                }
+
             }
         }
     }

@@ -171,7 +171,10 @@ public class PopulationModifier_PlanA_Version1 {
 
         // Substitute car mode by carInternal mode for people inside relevant area
         for (Person person : scenario.getPopulation().getPersons().values()) {
-            allAgentIDsList.add(person.getId());
+
+            if(!person.getId().toString().contains("freight")){
+                allAgentIDsList.add(person.getId());
+            }
 
 
             // for only Residents
