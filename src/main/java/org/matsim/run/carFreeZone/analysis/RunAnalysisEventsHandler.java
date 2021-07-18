@@ -15,12 +15,12 @@ public class RunAnalysisEventsHandler {
         //-------------For Input (and Output) Files-------------
         // BaseCase
         final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200";
-/*        // Plan1
-        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase1_200";
+        // Plan1
+//        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase1_200";
         // Plan2
-        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase2_200";
+//        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase2_200";
         // Plan3
-        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase3_200";*/
+//        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase3_200";
         //-------------For Input (and Output) Files-------------//
 
         String inputFile = runDirectory + "/berlin-v5.5-1pct.output_events.xml.gz";
