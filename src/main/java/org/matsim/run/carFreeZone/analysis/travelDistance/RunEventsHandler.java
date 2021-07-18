@@ -18,12 +18,13 @@
  * *********************************************************************** */
 package org.matsim.run.carFreeZone.analysis.travelDistance;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Person;
@@ -143,7 +144,8 @@ public class RunEventsHandler {
         }
 
 
-        writeDistancesToFile(outputFile_results);
+        //writeDistancesToFile(outputFile_results);
+        writeDistancesToCSV(outputFile_results);
 
     }
 
@@ -183,6 +185,65 @@ public class RunEventsHandler {
         writer.write("---------------------------------------------------------------" + "\n");
 
         writer.close();
+    }
+
+
+
+
+    static void writeDistancesToCSV(String fileName) {
+        try (Writer writer = Files.newBufferedWriter(Paths.get(fileName))) {
+            try (CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+
+                printer.print("Travel Distance");
+                printer.print("Number of this agentGroup");
+                printer.print("Total kilometer traveled in traffic by this agentGroup");
+                printer.print("Average kilometer traveled in traffic by this agentGroup");
+                printer.println();
+
+                printer.print("residents");
+                printer.print(residents.size());
+                printer.print(totalKilometerTraveledByResidentsInTraffic);
+                printer.print(totalKilometerTraveledByResidentsInTraffic / residents.size());
+                printer.println();
+
+                printer.print("workers");
+                printer.print(workers.size());
+                printer.print(totalKilometerTraveledByWorkersInTraffic);
+                printer.print(totalKilometerTraveledByWorkersInTraffic / workers.size());
+                printer.println();
+
+                printer.print("agentsDoingEducation");
+                printer.print(agentsDoingEducation.size());
+                printer.print(totalKilometerTraveledByAgentsDoingEducationInTraffic);
+                printer.print(totalKilometerTraveledByAgentsDoingEducationInTraffic / agentsDoingEducation.size());
+                printer.println();
+
+                printer.print("agentsDoingOtherActivities");
+                printer.print(agentsDoingOtherActivities.size());
+                printer.print(totalKilometerTraveledByAgentsDoingOtherActivitiesInTraffic);
+                printer.print(totalKilometerTraveledByAgentsDoingOtherActivitiesInTraffic / agentsDoingOtherActivities.size());
+                printer.println();
+
+                printer.print("agentsWithoutActivities");
+                printer.print(agentsWithoutActivities.size());
+                printer.print(totalKilometerTraveledByAgentsWithoutActivitiesInTraffic);
+                printer.print(totalKilometerTraveledByAgentsWithoutActivitiesInTraffic / agentsWithoutActivities.size());
+                printer.println();
+
+                printer.print("nonAffectedAgents");
+                printer.print(nonAffectedAgents.size());
+                printer.print(totalKilometerTraveledByNonAffectedAgentsInTraffic);
+                printer.print(totalKilometerTraveledByNonAffectedAgentsInTraffic / nonAffectedAgents.size());
+                printer.println();
+
+
+                printer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
