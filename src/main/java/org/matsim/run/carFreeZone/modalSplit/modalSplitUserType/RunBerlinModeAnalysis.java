@@ -154,12 +154,18 @@ public class RunBerlinModeAnalysis {
                 scenario1.getPopulation().removePerson(personId);
             }
         }
+        for (Id<Person> personId: allAgents_freight) {
+            scenario1.getPopulation().removePerson(personId);
+        }
 
         Scenario scenario2 = ScenarioUtils.loadScenario(config);
         for (Id<Person> personId: allAgents) {
             if(!workers.contains(personId)){
                 scenario2.getPopulation().removePerson(personId);
             }
+        }
+        for (Id<Person> personId: allAgents_freight) {
+            scenario2.getPopulation().removePerson(personId);
         }
 
         Scenario scenario3 = ScenarioUtils.loadScenario(config);
@@ -168,12 +174,18 @@ public class RunBerlinModeAnalysis {
                 scenario3.getPopulation().removePerson(personId);
             }
         }
+        for (Id<Person> personId: allAgents_freight) {
+            scenario3.getPopulation().removePerson(personId);
+        }
 
         Scenario scenario4 = ScenarioUtils.loadScenario(config);
         for (Id<Person> personId: allAgents) {
             if(!agentsDoingOtherActivities.contains(personId)){
                 scenario4.getPopulation().removePerson(personId);
             }
+        }
+        for (Id<Person> personId: allAgents_freight) {
+            scenario4.getPopulation().removePerson(personId);
         }
 
         Scenario scenario5 = ScenarioUtils.loadScenario(config);
@@ -182,12 +194,18 @@ public class RunBerlinModeAnalysis {
                 scenario5.getPopulation().removePerson(personId);
             }
         }
+        for (Id<Person> personId: allAgents_freight) {
+            scenario5.getPopulation().removePerson(personId);
+        }
 
         Scenario scenario6 = ScenarioUtils.loadScenario(config);
         for (Id<Person> personId: allAgents) {
             if(!nonAffectedAgents.contains(personId)){
                 scenario6.getPopulation().removePerson(personId);
             }
+        }
+        for (Id<Person> personId: allAgents_freight) {
+            scenario6.getPopulation().removePerson(personId);
         }
         
 
