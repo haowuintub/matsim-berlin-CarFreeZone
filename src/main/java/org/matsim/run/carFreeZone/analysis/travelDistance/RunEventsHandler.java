@@ -38,54 +38,35 @@ import org.matsim.core.utils.io.IOUtils;
 
 public class RunEventsHandler {
 
+    //Residents.
+    public static Set<Id> residents = new HashSet<>();
+    public static double totalKilometerTraveledByResidentsInTraffic = 0.0;
+
+    //Workers.
+    public static Set<Id> workers = new HashSet<>();
+    public static double totalKilometerTraveledByWorkersInTraffic = 0.0;
+
+    //AgentsDoingEducation.
+    public static Set<Id> agentsDoingEducation = new HashSet<>();
+    public static double totalKilometerTraveledByAgentsDoingEducationInTraffic = 0.0;
+
+    //AgentsDoingOtherActivities.
+    public static Set<Id> agentsDoingOtherActivities = new HashSet<>();
+    public static double totalKilometerTraveledByAgentsDoingOtherActivitiesInTraffic = 0.0;
+
+    //AgentsWithoutActivities.
+    public static Set<Id> agentsWithoutActivities = new HashSet<>();
+    public static double totalKilometerTraveledByAgentsWithoutActivitiesInTraffic = 0.0;
+
+    //NonAffectedAgent.
+    public static Set<Id> nonAffectedAgents = new HashSet<>();
+    public static double totalKilometerTraveledByNonAffectedAgentsInTraffic = 0.0;
+
     public static void main(String[] args) throws IOException {
 
         String inputFile = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/berlin-v5.5-1pct.output_events.xml.gz";
         String outputFile_results = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/analysis/travelDistance.txt";
 
-
-
-
-        //EventsManager eventsManager = EventsUtils.createEventsManager();
-        EventsManager eventsManager = new EventsManagerImpl();
-        Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
-
-        new MatsimNetworkReader(scenario.getNetwork()).readFile("scenarios/berlin-v5.5-1pct/input/berlin-v5.5-network.xml.gz");
-
-        CarTravelDistanceEvaluator carTravelDistanceEvaluator = new CarTravelDistanceEvaluator(scenario.getNetwork());
-        eventsManager.addHandler(carTravelDistanceEvaluator);
-        eventsManager.initProcessing();
-        new MatsimEventsReader(eventsManager).readFile(inputFile);
-        eventsManager.finishProcessing();
-
-        writeDistancesToFile(carTravelDistanceEvaluator.getTravelledDistanceMap(), outputFile_results);
-
-    }
-
-    static void writeDistancesToFile(Map<Id<Person>,Double> travelledDistance, String fileName) throws IOException {
-        //Residents.
-        Set<Id> residents = new HashSet<>();
-        double totalKilometerTraveledByResidentsInTraffic = 0.0;
-
-        //Workers.
-        Set<Id> workers = new HashSet<>();
-        double totalKilometerTraveledByWorkersInTraffic = 0.0;
-
-        //AgentsDoingEducation.
-        Set<Id> agentsDoingEducation = new HashSet<>();
-        double totalKilometerTraveledByAgentsDoingEducationInTraffic = 0.0;
-
-        //AgentsDoingOtherActivities.
-        Set<Id> agentsDoingOtherActivities = new HashSet<>();
-        double totalKilometerTraveledByAgentsDoingOtherActivitiesInTraffic = 0.0;
-
-        //AgentsWithoutActivities.
-        Set<Id> agentsWithoutActivities = new HashSet<>();
-        double totalKilometerTraveledByAgentsWithoutActivitiesInTraffic = 0.0;
-
-        //NonAffectedAgent.
-        Set<Id> nonAffectedAgents = new HashSet<>();
-        double totalKilometerTraveledByNonAffectedAgentsInTraffic = 0.0;
 
         Scanner scanner6 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/workerIDsList.txt"));
         while (scanner6.hasNextLine()){
@@ -130,7 +111,22 @@ public class RunEventsHandler {
         scanner10.close();
 
 
-        for(Map.Entry<Id<Person>, Double> map : travelledDistance.entrySet()){
+
+
+        //EventsManager eventsManager = EventsUtils.createEventsManager();
+        EventsManager eventsManager = new EventsManagerImpl();
+        Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+
+        new MatsimNetworkReader(scenario.getNetwork()).readFile("scenarios/berlin-v5.5-1pct/input/berlin-v5.5-network.xml.gz");
+
+        CarTravelDistanceEvaluator carTravelDistanceEvaluator = new CarTravelDistanceEvaluator(scenario.getNetwork());
+        eventsManager.addHandler(carTravelDistanceEvaluator);
+        eventsManager.initProcessing();
+        new MatsimEventsReader(eventsManager).readFile(inputFile);
+        eventsManager.finishProcessing();
+
+
+        for(Map.Entry<Id<Person>, Double> map : carTravelDistanceEvaluator.getTravelledDistanceMap().entrySet()){
             if(residents.contains(map.getKey())){
                 totalKilometerTraveledByResidentsInTraffic += map.getValue();
             } else if(workers.contains(map.getKey())){
@@ -147,7 +143,11 @@ public class RunEventsHandler {
         }
 
 
+        writeDistancesToFile(outputFile_results);
 
+    }
+
+    static void writeDistancesToFile(String fileName) throws IOException {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 

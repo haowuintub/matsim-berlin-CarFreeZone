@@ -24,7 +24,8 @@ public class RunAnalysisEventsHandler {
         //String inputFile = "scenarios/berlin-v5.5-1pct/output-berlin-v5.5-1pct_PlanB_Network2_Version1_firstSuccessfulRun_50Iterations/berlin-v5.5-1pct.output_events.xml";
         // PlanB 100Iterations
         String inputFile = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/berlin-v5.5-1pct.output_events.xml.gz";
-        String outputFile_results = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/analysis/travelTime.txt";
+        //String outputFile_results = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/analysis/travelTime.txt";
+        String outputFile_results = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/analysis/";
 
         // PlanC
         //String inputFile = "scenarios/berlin-v5.5-1pct/output-berlin-v5.5-1pct_PlanC_firstSuccessfulRun_100Iterations/berlin-v5.5-1pct.output_events.xml";
@@ -42,7 +43,8 @@ public class RunAnalysisEventsHandler {
         MatsimEventsReader eventsReader = new MatsimEventsReader(eventsManager);
         eventsReader.readFile(inputFile);
 
-        eventHandler.printResults(outputFile_results);
+        //eventHandler.printResults(outputFile_results);
+        eventHandler.printResultsToCSV(outputFile_results);
 
     }
 }

@@ -1,5 +1,7 @@
 package org.matsim.run.carFreeZone.analysis;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.events.*;
@@ -18,10 +20,9 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDepartureEventHandler, PersonArrivalEventHandler, PersonLeavesVehicleEventHandler {
@@ -109,7 +110,7 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
     public static Set<Id> agentsUsingPt = new HashSet<>();
 
 
-    public LinkAnalysisEventHandler() throws IOException, ParserConfigurationException, SAXException {
+    public LinkAnalysisEventHandler() throws IOException {
         //Create every link list.
         Scanner scanner = new Scanner(new File("/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/SS2020/Multi-agent_transport_simulation_SoSe_2020/HA/HA2/LinkIDs/LinkIDsList_withoutFormatProblem/LinkIDs_YellowStreets.txt"));
         while(scanner.hasNextLine())
@@ -490,4 +491,153 @@ public class LinkAnalysisEventHandler implements LinkEnterEventHandler, PersonDe
 
         writer.close();
     }
+
+
+
+
+    public void printResultsToCSV(String outputFile_results) {
+        String outputFile_results_travelTime;
+        String outputFile_results_roadInformation;
+
+        outputFile_results_travelTime = outputFile_results + "travelTime.csv";
+        try (Writer writer = Files.newBufferedWriter(Paths.get(outputFile_results_travelTime))) {
+            try (CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+
+                printer.print("Travel Time");
+                printer.print("Number of this agentGroup");
+                printer.print("Total time spent in traffic by this agentGroup");
+                printer.print("Average time spent in traffic by this agentGroup");
+                printer.print("Number of this agentGroup using pt");
+                printer.println();
+
+                printer.print("residents");
+                printer.print(residents.size());
+                printer.print(totalTimeSpentByResidentsInTraffic);
+                printer.print(totalTimeSpentByResidentsInTraffic / residents.size());
+                printer.print(residentsUsingPT.size());
+                printer.println();
+
+                printer.print("workers");
+                printer.print(workers.size());
+                printer.print(totalTimeSpentByWorkersInTraffic);
+                printer.print(totalTimeSpentByWorkersInTraffic / workers.size());
+                printer.print(workersUsingPT.size());
+                printer.println();
+
+                printer.print("agentsDoingEducation");
+                printer.print(agentsDoingEducation.size());
+                printer.print(totalTimeSpentByAgentsDoingEducationInTraffic);
+                printer.print(totalTimeSpentByAgentsDoingEducationInTraffic / agentsDoingEducation.size());
+                printer.print(agentsDoingEducationUsingPT.size());
+                printer.println();
+
+                printer.print("agentsDoingOtherActivities");
+                printer.print(agentsDoingOtherActivities.size());
+                printer.print(totalTimeSpentByAgentsDoingOtherActivitiesInTraffic);
+                printer.print(totalTimeSpentByAgentsDoingOtherActivitiesInTraffic / agentsDoingOtherActivities.size());
+                printer.print(agentsDoingOtherActivitiesUsingPT.size());
+                printer.println();
+
+                printer.print("agentsWithoutActivities");
+                printer.print(agentsWithoutActivities.size());
+                printer.print(totalTimeSpentByAgentsWithoutActivitiesInTraffic);
+                printer.print(totalTimeSpentByAgentsWithoutActivitiesInTraffic / agentsWithoutActivities.size());
+                printer.print(agentsWithoutActivitiesUsingPT.size());
+                printer.println();
+
+                printer.print("nonAffectedAgents");
+                printer.print(nonAffectedAgents.size());
+                printer.print(totalTimeSpentByNonAffectedAgentsInTraffic);
+                printer.print(totalTimeSpentByNonAffectedAgentsInTraffic / nonAffectedAgents.size());
+                printer.print(nonAffectedAgentsUsingPT.size());
+                printer.println();
+                printer.println();
+
+
+                printer.print("Number of agents using pt");
+                printer.print(agentsUsingPt.size());
+                printer.println();
+
+
+
+
+                printer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        outputFile_results_roadInformation = outputFile_results + "roadInformation.csv";
+        try (Writer writer = Files.newBufferedWriter(Paths.get(outputFile_results_roadInformation))) {
+            try (CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+
+                printer.print("Road information");
+                printer.print("INTERNAL LINKS");
+                printer.print("RED LINKS");
+                printer.print("YELLOW LINKS");
+                printer.print("GREEN LINKS");
+                printer.print("ERNST Reuter");
+                printer.println();
+
+                printer.print("Total distance travelled");
+                printer.print(totalDistanceTravelledInInternalZone);
+                printer.print(totalDistanceTravelledInRedLinks);
+                printer.print(totalDistanceTravelledInYellowLinks);
+                printer.print(totalDistanceTravelledInGreenLinks);
+                printer.print(totalDistanceTravelledInErnstReuter);
+                printer.println();
+
+                printer.print("Total time travelled");
+                printer.print(totalTimeSpentInInternalZone);
+                printer.print(totalTimeSpentInRedLinks);
+                printer.print(totalTimeSpentInYellowLinks);
+                printer.print(totalTimeSpentInGreenLinks);
+                printer.print(totalTimeSpentInErnstReuter);
+                printer.println();
+
+                printer.print("Total number of vehicles going through");
+                printer.print(vehiclesGoingThroughInternalZone.size());
+                printer.print(vehiclesGoingThroughRedLinks.size());
+                printer.print(vehiclesGoingThroughYellowLinks.size());
+                printer.print(vehiclesGoingThroughGreenLinks.size());
+                printer.print(vehiclesGoingThroughErnstReuter.size());
+                printer.println();
+                printer.println();
+                printer.println();
+                printer.println();
+                printer.println();
+
+
+
+
+                printer.print("Number of affected vehicles");
+                printer.print(sum_affectedVehicles);
+                printer.println();
+
+                printer.print("Total distance travelled by the affected vehicles");
+                printer.print(totalDistanceTravelledByAffectedVehicles);
+                printer.println();
+
+                printer.print("Average distance travelled by the affected vehicles");
+                printer.print(totalDistanceTravelledByAffectedVehicles/sum_affectedVehicles);
+                printer.println();
+
+
+
+
+                printer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
