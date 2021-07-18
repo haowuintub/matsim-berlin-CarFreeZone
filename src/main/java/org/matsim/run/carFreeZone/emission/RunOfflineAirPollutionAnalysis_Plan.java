@@ -58,11 +58,11 @@ public class RunOfflineAirPollutionAnalysis_Plan {
 //	final static String hbefaFileWarm = "shared-svn/projects/matsim-germany/hbefa/hbefa-files/v3.2/EFA_HOT_vehcat_2005average.txt";
 
 	// --- for policyCase_Plan1 ---
-	//final static String runDirectory = "output-berlin-v5.5-1pct-policyCase1_200/";
+	final static String runDirectory = "output-berlin-v5.5-1pct-policyCase1_200/";
 	// --- for policyCase_Plan2 ---
 	//final static String runDirectory = "output-berlin-v5.5-1pct-policyCase2_200/";
 	// --- for policyCase_Plan3 ---
-	final static String runDirectory = "output-berlin-v5.5-1pct-policyCase3_200/";
+//	final static String runDirectory = "output-berlin-v5.5-1pct-policyCase3_200/";
 	final static String runId = "berlin-v5.5-1pct";
 
 	final static String hbefaFileCold = "EFA_ColdStart_Vehcat_2020_Average_perVehCat_Bln_carOnly.csv";
