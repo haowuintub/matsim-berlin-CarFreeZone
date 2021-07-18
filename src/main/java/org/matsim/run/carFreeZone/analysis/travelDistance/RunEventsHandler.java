@@ -65,8 +65,22 @@ public class RunEventsHandler {
 
     public static void main(String[] args) throws IOException {
 
-        String inputFile = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/berlin-v5.5-1pct.output_events.xml.gz";
-        String outputFile_results = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/analysis/travelDistance.txt";
+        //-------------For Input (and Output) Files-------------
+        // BaseCase
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200";
+/*        // Plan1
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase1_200";
+        // Plan2
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase2_200";
+        // Plan3
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase3_200";*/
+        //-------------For Input (and Output) Files-------------//
+
+        String inputFile = runDirectory + "/berlin-v5.5-1pct.output_events.xml.gz";
+        //String outputFile_results = runDirectory + "/analysis/travelDistance.txt";
+        String outputFile_results = runDirectory + "/analysis/travelDistance.csv";
+
+
 
 
         Scanner scanner6 = new Scanner(new File("scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/workerIDsList.txt"));

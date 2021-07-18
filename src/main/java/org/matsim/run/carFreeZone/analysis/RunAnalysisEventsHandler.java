@@ -12,26 +12,20 @@ import java.io.IOException;
 public class RunAnalysisEventsHandler {
     public static void main(String args[]) throws IOException, ParserConfigurationException, SAXException {
 
-
         //-------------For Input (and Output) Files-------------
         // BaseCase
-        //String inputFile = "scenarios/berlin-v5.5-1pct/output-berlin-v5.5-1pct_baseCase_100Iterations/berlin-v5.5-1pct.output_events.xml";
-
-        // PlanA
-        //String inputFile = "scenarios/berlin-v5.5-1pct/output-berlin-v5.5-1pct-subpop_PlanA_Version1_secondSuccessfulRun_100Iterations/berlin-v5.5-1pct.output_events.xml";
-
-        // PlanB 50Iterations
-        //String inputFile = "scenarios/berlin-v5.5-1pct/output-berlin-v5.5-1pct_PlanB_Network2_Version1_firstSuccessfulRun_50Iterations/berlin-v5.5-1pct.output_events.xml";
-        // PlanB 100Iterations
-        String inputFile = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/berlin-v5.5-1pct.output_events.xml.gz";
-        //String outputFile_results = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/analysis/travelTime.txt";
-        String outputFile_results = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/analysis/";
-
-        // PlanC
-        //String inputFile = "scenarios/berlin-v5.5-1pct/output-berlin-v5.5-1pct_PlanC_firstSuccessfulRun_100Iterations/berlin-v5.5-1pct.output_events.xml";
-
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200";
+/*        // Plan1
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase1_200";
+        // Plan2
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase2_200";
+        // Plan3
+        final String runDirectory = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase3_200";*/
         //-------------For Input (and Output) Files-------------//
 
+        String inputFile = runDirectory + "/berlin-v5.5-1pct.output_events.xml.gz";
+        //String outputFile_results = runDirectory + "/analysis/travelTime.txt";
+        String outputFile_results = runDirectory + "/analysis/";
 
 
 
