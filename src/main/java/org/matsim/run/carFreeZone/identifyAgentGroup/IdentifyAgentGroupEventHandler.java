@@ -215,6 +215,16 @@ public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, Ac
         }
         writer3.close();
 
+        List<String> deletedResidentWorkerIDsList = new ArrayList<>();
+        agentsDoingOtherActivitiesIDsList = new ArrayList<>(new LinkedHashSet<>(agentsDoingOtherActivitiesIDsList));
+        for (String agentsDoingOtherActivities : agentsDoingOtherActivitiesIDsList) {
+            if(residentIDsList.contains(agentsDoingOtherActivities)|workerIDsList.contains(agentsDoingOtherActivities)){
+                deletedResidentWorkerIDsList.add(agentsDoingOtherActivities);
+            }
+        }
+        for (String deletedResidentWorker : deletedResidentWorkerIDsList) {
+            agentsDoingOtherActivitiesIDsList.remove(deletedResidentWorker);
+        }
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile_agentsDoingOtherActivitiesIDsList));
         agentsDoingOtherActivitiesIDsList = new ArrayList<>(new LinkedHashSet<>(agentsDoingOtherActivitiesIDsList));
         for (String a : agentsDoingOtherActivitiesIDsList) {
