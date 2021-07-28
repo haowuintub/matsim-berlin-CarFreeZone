@@ -58,26 +58,27 @@ public class GenerateAirPollutionSpatialPlots {
 
 
     // --- haowu ---
-/*    private static final double xMin = 317373;
-    private static final double yMin = 5675521.;
-    private static final double xMax = 418575.;
-    private static final double yMax = 5736671.;*/
-    //smaller BoundingBox:
-    private static final double xMin = 4588458.659;
+    //BoundingBox:
+/*    private static final double xMin = 4588458.659;
     private static final double yMin = 5819286.907;
     private static final double xMax = 4591789.274;
-    private static final double yMax = 5820831.663;
-    //bigger BoundingBox:
-/*    private static final double xMin = 4586793.3515;
-    private static final double yMin = 5818514.529;
-    private static final double xMax = 4593454.5815;
-    private static final double yMax = 5821604.041;*/
+    private static final double yMax = 5820831.663;*/
+    //2BoundingBox:
+	private static final double xMin = 4586793.3515;
+	private static final double yMin = 5818514.529;
+	private static final double xMax = 4593454.5815;
+	private static final double yMax = 5821604.041;
+    //3BoundingBox:
+/*	private static final double xMin = 4583462.7365;
+	private static final double yMin = 5816969.773;
+	private static final double xMax = 4596785.1965;
+	private static final double yMax = 5823148.797;*/
     // --- haowu ---
 
 
 
 
-    private static final double gridSize = 100.;
+    private static final double gridSize = 30.;
     private static final double smoothingRadius = 500.;
     private static final double scaleFactor = 100.;
 
@@ -116,7 +117,7 @@ public class GenerateAirPollutionSpatialPlots {
         final String configFile = runDir + runId + ".output_config.xml";
         final String events = runDir + runId + ".emission.events.offline.xml.gz";
         final String outputDir = StringUtils.isBlank(outDir) ? runDir : outDir;
-        final String outputFile = outputDir + runId + ".emissionsgrid_boundingbox.csv";
+        final String outputFile = outputDir + runId + ".emissionsgrid_2boundingbox_hour_30.csv";
 
         Config config = ConfigUtils.loadConfig(configFile);
         config.plans().setInputFile(null);
@@ -126,8 +127,8 @@ public class GenerateAirPollutionSpatialPlots {
         config.network().setInputFile(/*runDir +*/ runId + ".output_network.xml.gz");
         Scenario scenario = ScenarioUtils.loadScenario(config);
 
-        double binSize = 200000; // make the bin size bigger than the scenario has seconds
-        //double binSize = 3600; // make the bin size bigger than the scenario has seconds
+//        double binSize = 200000; // make the bin size bigger than the scenario has seconds
+        double binSize = 3600; // make the bin size bigger than the scenario has seconds
         Network network = scenario.getNetwork();
 
         EmissionGridAnalyzer analyzer = new EmissionGridAnalyzer.Builder()
