@@ -9,6 +9,10 @@ import playground.vsp.openberlinscenario.cemdap.output.ActivityTypes;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author haowuintub
+ */
+
 public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, ActivityEndEventHandler {
 
     public static List<String> personInternalLinkIDsList = new ArrayList<String>();
