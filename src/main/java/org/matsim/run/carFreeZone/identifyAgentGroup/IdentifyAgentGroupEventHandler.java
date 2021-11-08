@@ -131,6 +131,7 @@ public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, Ac
         //combine and clean LinksLists for those not having car mode in No Car Zone
         personInternalLinkIDsList.addAll(InternalStreetsList);
         personInternalLinkIDsList.addAll(YellowStreetsList);
+        //ToDO: Does RedStreets belong to InternalStreets?
         personInternalLinkIDsList.addAll(RedStreetsList);
         personInternalLinkIDsList.addAll(GreenStreetsList);
         personInternalLinkIDsList.addAll(ElongationPedestrianZoneList);
@@ -170,19 +171,21 @@ public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, Ac
 
     @Override
     public void handleEvent(ActivityEndEvent event){
-        if (personInternalLinkIDsList.contains(event.getLinkId().toString())){
-            if (event.getActType().contains(ActivityTypes.WORK)){
-                workerIDsList.add(event.getPersonId().toString());
-            }else if(event.getActType().contains(ActivityTypes.EDUCATION)){
-                agentsDoingEducationIDsList.add(event.getPersonId().toString());
-            }else if(event.getActType().contains(ActivityTypes.HOME)){
+        if((!event.getPersonId().toString().contains("freight"))&(!event.getPersonId().toString().contains("pt"))){
+            if (personInternalLinkIDsList.contains(event.getLinkId().toString())){
+                //ToDo: extract residentsIDs here?
+                if (event.getActType().contains(ActivityTypes.WORK)){
+                    workerIDsList.add(event.getPersonId().toString());
+                }else if(event.getActType().contains(ActivityTypes.EDUCATION)){
+                    agentsDoingEducationIDsList.add(event.getPersonId().toString());
+                }else if(event.getActType().contains(ActivityTypes.HOME)){
 
-            }else{
-                //ActivityTypes: LEISURE, SHOPPING, OTHER
-                if(!event.getPersonId().toString().contains("freight")){
-                    agentsDoingOtherActivitiesIDsList.add(event.getPersonId().toString());
+                }else{
+                    //ActivityTypes: LEISURE, SHOPPING, OTHER
+                    if(event.getActType().contains(ActivityTypes.LEISURE)|event.getActType().contains(ActivityTypes.SHOPPING)|event.getActType().contains(ActivityTypes.OTHER)) {
+                        agentsDoingOtherActivitiesIDsList.add(event.getPersonId().toString());
+                    }
                 }
-
             }
         }
     }
