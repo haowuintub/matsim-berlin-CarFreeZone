@@ -223,7 +223,7 @@ public class NetworkModifier_Plan1 {
                     if (mode.equals(TransportMode.car)) {
                         allowedModesAfter.add("carInternal");
                         /*if (!areaGeometry.contains(linkCenterAsPoint)) {*/
-                        if ((!InternalStreetsList.contains(link.getId().toString()))&&(!ElongationPedestrianZoneList.contains(link.getId().toString()))&&(!GreenStreetsList.contains(link.getId().toString()))) {
+                        if ((!InternalStreetsList.contains(link.getId().toString()))&&(!YellowStreetsList.contains(link.getId().toString()))&&(!ElongationPedestrianZoneList.contains(link.getId().toString()))&&(!GreenStreetsList.contains(link.getId().toString()))) {
                             allowedModesAfter.add(TransportMode.car);
                         }
                     } else {
@@ -270,7 +270,7 @@ public class NetworkModifier_Plan1 {
                 //for (String mode : link.getAllowedModes()) { //这行需要吗？？？
                     allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
                     allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
-                    //allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
+                    allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
 
                     //******changes in PlanA_Version1_1******
                     //加walk、bicycle
@@ -314,9 +314,9 @@ public class NetworkModifier_Plan1 {
                     allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
                     allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
 
-                    if (remainingCarlinksAfterCleaning.contains(link.getId())) {
+/*                    if (remainingCarlinksAfterCleaning.contains(link.getId())) {
                         allowedModesAfter.add(TransportMode.car);
-                    }
+                    }*/
 
                     //******changes in PlanA_Version1_1******
                     //加walk、bicycle
@@ -417,61 +417,61 @@ public class NetworkModifier_Plan1 {
 
 
 
-        //change NumberOfLanes and Freespeed
-        // save LinkIDs of cleaned Network as List
-        ArrayList<String> cleanedNetworkLinkIDList = new ArrayList<>();
-        for (Link link : carInternalScenario.getNetwork().getLinks().values()) {
-            cleanedNetworkLinkIDList.add(link.getId().toString());
-        }
-
-
-        //******changes in PlanA_Version1_1_fixed******
-        //——————add Lane——————
-        // for YellowStreets
-/*        for (int i = 0; i < YellowStreetsList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(YellowStreetsList.get(i))) {
-                double numberOfLanes_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getNumberOfLanes() + 1.;
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setNumberOfLanes(numberOfLanes_After_YellowStreets);
-
-                double capacity_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity() * (numberOfLanes_After_YellowStreets / (numberOfLanes_After_YellowStreets - 1));
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setCapacity(capacity_After_YellowStreets);
-                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity());
-            }
-        }*/
-        //******changes in PlanA_Version1_1******
-        // for RedStreets_Add_Lane
-        for (int i = 0; i < RedStreets_Add_LaneList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(RedStreets_Add_LaneList.get(i))) {
-                double numberOfLanes_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getNumberOfLanes() + 1.;
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setNumberOfLanes(numberOfLanes_After_RedStreets_Add_Lane);
-
-                double capacity_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity() * (numberOfLanes_After_RedStreets_Add_Lane / (numberOfLanes_After_RedStreets_Add_Lane - 1));
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setCapacity(capacity_After_RedStreets_Add_Lane);
-                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity());
-            }
-        }
-        //******changes in PlanA_Version1_1******//
-
-        //——————add Lane——————//
-        //******changes in PlanA_Version1_1_fixed******//
-
-
-        //——————SpeedModifier——————
-        // for GreenStreets
-/*        for (int i = 0; i < GreenStreetsList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(GreenStreetsList.get(i))) {
-                double freeSpeed_GreenStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).getFreespeed();
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).setFreespeed((freeSpeed_GreenStreetsList-5/3.6));
-            }
-        }*/
-        // for InternalStreets
-        for (int i = 0; i < InternalStreetsList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(InternalStreetsList.get(i))) {
-                double freeSpeed_InternalStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).getFreespeed();
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).setFreespeed((freeSpeed_InternalStreetsList-5/3.6));
-            }
-        }
-        //——————SpeedModifier——————//
+//        //change NumberOfLanes and Freespeed
+//        // save LinkIDs of cleaned Network as List
+//        ArrayList<String> cleanedNetworkLinkIDList = new ArrayList<>();
+//        for (Link link : carInternalScenario.getNetwork().getLinks().values()) {
+//            cleanedNetworkLinkIDList.add(link.getId().toString());
+//        }
+//
+//
+//        //******changes in PlanA_Version1_1_fixed******
+//        //——————add Lane——————
+//        // for YellowStreets
+///*        for (int i = 0; i < YellowStreetsList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(YellowStreetsList.get(i))) {
+//                double numberOfLanes_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getNumberOfLanes() + 1.;
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setNumberOfLanes(numberOfLanes_After_YellowStreets);
+//
+//                double capacity_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity() * (numberOfLanes_After_YellowStreets / (numberOfLanes_After_YellowStreets - 1));
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setCapacity(capacity_After_YellowStreets);
+//                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity());
+//            }
+//        }*/
+//        //******changes in PlanA_Version1_1******
+//        // for RedStreets_Add_Lane
+//        for (int i = 0; i < RedStreets_Add_LaneList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(RedStreets_Add_LaneList.get(i))) {
+//                double numberOfLanes_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getNumberOfLanes() + 1.;
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setNumberOfLanes(numberOfLanes_After_RedStreets_Add_Lane);
+//
+//                double capacity_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity() * (numberOfLanes_After_RedStreets_Add_Lane / (numberOfLanes_After_RedStreets_Add_Lane - 1));
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setCapacity(capacity_After_RedStreets_Add_Lane);
+//                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity());
+//            }
+//        }
+//        //******changes in PlanA_Version1_1******//
+//
+//        //——————add Lane——————//
+//        //******changes in PlanA_Version1_1_fixed******//
+//
+//
+//        //——————SpeedModifier——————
+//        // for GreenStreets
+///*        for (int i = 0; i < GreenStreetsList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(GreenStreetsList.get(i))) {
+//                double freeSpeed_GreenStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).getFreespeed();
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).setFreespeed((freeSpeed_GreenStreetsList-5/3.6));
+//            }
+//        }*/
+//        // for InternalStreets
+//        for (int i = 0; i < InternalStreetsList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(InternalStreetsList.get(i))) {
+//                double freeSpeed_InternalStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).getFreespeed();
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).setFreespeed((freeSpeed_InternalStreetsList-5/3.6));
+//            }
+//        }
+//        //——————SpeedModifier——————//
 
 
         // Write modified network to file

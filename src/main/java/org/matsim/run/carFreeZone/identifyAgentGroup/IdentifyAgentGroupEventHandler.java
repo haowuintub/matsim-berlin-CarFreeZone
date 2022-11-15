@@ -132,7 +132,7 @@ public class IdentifyAgentGroupEventHandler implements LinkEnterEventHandler, Ac
         personInternalLinkIDsList.addAll(InternalStreetsList);
         personInternalLinkIDsList.addAll(YellowStreetsList);
         //ToDO: Does RedStreets belong to InternalStreets?
-        personInternalLinkIDsList.addAll(RedStreetsList);
+        //personInternalLinkIDsList.addAll(RedStreetsList);
         personInternalLinkIDsList.addAll(GreenStreetsList);
         personInternalLinkIDsList.addAll(ElongationPedestrianZoneList);
         personInternalLinkIDsList = new ArrayList<>(new LinkedHashSet<>(personInternalLinkIDsList));

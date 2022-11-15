@@ -78,7 +78,7 @@ public class GenerateAirPollutionSpatialPlots {
 
 
 
-    private static final double gridSize = 30.;
+    private static final double gridSize = 20.;
     private static final double smoothingRadius = 500.;
     private static final double scaleFactor = 100.;
 
@@ -117,7 +117,7 @@ public class GenerateAirPollutionSpatialPlots {
         final String configFile = runDir + runId + ".output_config.xml";
         final String events = runDir + runId + ".emission.events.offline.xml.gz";
         final String outputDir = StringUtils.isBlank(outDir) ? runDir : outDir;
-        final String outputFile = outputDir + runId + ".emissionsgrid_2boundingbox_hour_30.csv";
+        final String outputFile = outputDir + runId + ".emissionsgrid_2boundingbox_hour_20.csv";
 
         Config config = ConfigUtils.loadConfig(configFile);
         config.plans().setInputFile(null);
@@ -127,7 +127,7 @@ public class GenerateAirPollutionSpatialPlots {
         config.network().setInputFile(/*runDir +*/ runId + ".output_network.xml.gz");
         Scenario scenario = ScenarioUtils.loadScenario(config);
 
-//        double binSize = 200000; // make the bin size bigger than the scenario has seconds
+        //double binSize = 200000; // make the bin size bigger than the scenario has seconds
         double binSize = 3600; // make the bin size bigger than the scenario has seconds
         Network network = scenario.getNetwork();
 
@@ -197,15 +197,15 @@ public class GenerateAirPollutionSpatialPlots {
         });
         // --- haowu shapefile2 ---
         //same kind of BoundingBox but using my own shapeFile as the BoundingBox
-/*        String areaShapeFile = "/Users/haowu/Workspace/QGIS/MATSim_HA2/NoCarZone_withRoundabout/NoCarZone_withRoundabout.shp";
+/*        String areaShapeFile = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/berlin-shp/berlin.shp";
         Collection<SimpleFeature> features = (new ShapeFileReader()).readFileAndInitialize(areaShapeFile);
 
         Map<String, Geometry> zoneGeometries = new HashMap<>();
         for (SimpleFeature feature : features) {
-            zoneGeometries.put((String)feature.getAttribute("Name"),(Geometry)feature.getDefaultGeometry());
+            zoneGeometries.put((String)feature.getAttribute("SCHLUESSEL"),(Geometry)feature.getDefaultGeometry());
         }
 
-        Geometry areaGeometry = zoneGeometries.get(("NoCarZone"));
+        Geometry areaGeometry = zoneGeometries.get(("010113"));
         return areaGeometry;*/
     }
 }

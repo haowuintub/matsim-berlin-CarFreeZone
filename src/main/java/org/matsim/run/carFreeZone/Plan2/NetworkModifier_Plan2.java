@@ -200,12 +200,12 @@ public class NetworkModifier_Plan2 {
 /*        Set<String> allowedModes_ElongationPedestrianZoneList = new HashSet<String>();
         //allowedModes.add("ride");
         allowedModes_ElongationPedestrianZoneList.add("walk");
-        allowedModes_ElongationPedestrianZoneList.add("bicycle");*/
+        allowedModes_ElongationPedestrianZoneList.add("bicycle");
         Set<String> allowedModes_GreenStreetsList = new HashSet<String>();
         //allowedModes.add("ride");
         allowedModes_GreenStreetsList.add("walk");
         allowedModes_GreenStreetsList.add("bicycle");
-        allowedModes_GreenStreetsList.add("freight");
+        allowedModes_GreenStreetsList.add("freight");*/
 
         // Modify the car network
         for (Link link : scenario.getNetwork().getLinks().values()) {
@@ -216,22 +216,22 @@ public class NetworkModifier_Plan2 {
 
             /*if (ElongationPedestrianZoneList.contains(link.getId().toString())) {
                 link.setAllowedModes(allowedModes_ElongationPedestrianZoneList);
-            } else*/ if (GreenStreetsList.contains(link.getId().toString())) {
+            } else if (GreenStreetsList.contains(link.getId().toString())) {
                 link.setAllowedModes(allowedModes_GreenStreetsList);
-            } else {
-                for (String mode : allowedModesBefore) {
-                    if (mode.equals(TransportMode.car)) {
-                        allowedModesAfter.add("carInternal");
-                        /*if (!areaGeometry.contains(linkCenterAsPoint)) {*/
-                        if ((!InternalStreetsList.contains(link.getId().toString()))&&(!YellowStreetsList.contains(link.getId().toString()))&&(!ElongationPedestrianZoneList.contains(link.getId().toString()))) {
-                            allowedModesAfter.add(TransportMode.car);
-                        }
-                    } else {
-                        allowedModesAfter.add(mode);
+            } else {*/
+            for (String mode : allowedModesBefore) {
+                if (mode.equals(TransportMode.car)) {
+                    allowedModesAfter.add("carInternal");
+                    /*if (!areaGeometry.contains(linkCenterAsPoint)) {*/
+                    if ((!InternalStreetsList.contains(link.getId().toString()))/*&&(!YellowStreetsList.contains(link.getId().toString()))*/&&(!ElongationPedestrianZoneList.contains(link.getId().toString()))&&(!GreenStreetsList.contains(link.getId().toString()))) {
+                        allowedModesAfter.add(TransportMode.car);
                     }
+                } else {
+                    allowedModesAfter.add(mode);
                 }
-                link.setAllowedModes(allowedModesAfter);
             }
+            link.setAllowedModes(allowedModesAfter);
+            //}
         }
         LOG.info("Finished modifying car vs. carInternal network");
 
@@ -268,59 +268,67 @@ public class NetworkModifier_Plan2 {
                 //for Links in carInternal zone//
 
                 //for (String mode : link.getAllowedModes()) { //这行需要吗？？？
-                    allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
-                    allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
-                    //allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
+                allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
+                allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
+                allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
 
-                    //******changes in PlanA_Version1_1******
-                    //加walk、bicycle
-                    allowedModesAfter.add("walk");
-                    allowedModesAfter.add("bicycle");
-                    //加walk、bicycle//
-                    //******changes in PlanA_Version1_1******//
+                //******changes in PlanA_Version1_1******
+                //加walk、bicycle
+                allowedModesAfter.add("walk");
+                allowedModesAfter.add("bicycle");
+                //加walk、bicycle//
+                //******changes in PlanA_Version1_1******//
 
                 //}
 
 
-            //for Links in pedestrian zone: Wilmersdorfer Str.
+                //for Links in pedestrian zone: Wilmersdorfer Str.
             }else if (RedStreetsList.contains(link.getId().toString())) {
                 //for Links in carInternal zone//
 
                 //for (String mode : link.getAllowedModes()) { //这行需要吗？？？
-                    allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
-                    allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
-                    allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
+                allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
+                allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
+                allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
 
-                    if (remainingCarlinksAfterCleaning.contains(link.getId())) {
-                        allowedModesAfter.add(TransportMode.car);
-                    }
+                if (remainingCarlinksAfterCleaning.contains(link.getId())) {
+                    allowedModesAfter.add(TransportMode.car);
+                }
 
-                    //******changes in PlanA_Version1_1******
-                    //加walk、bicycle
-                    allowedModesAfter.add("walk");
-                    allowedModesAfter.add("bicycle");
-                    //加walk、bicycle//
-                    //******changes in PlanA_Version1_1******//
+                //******changes in PlanA_Version1_1******
+                //加walk、bicycle
+                allowedModesAfter.add("walk");
+                allowedModesAfter.add("bicycle");
+                //加walk、bicycle//
+                //******changes in PlanA_Version1_1******//
 
                 //}
 
 
                 //for Links in pedestrian zone: Wilmersdorfer Str.
             }else if (YellowStreetsList.contains(link.getId().toString())) {
+                //for Links in carInternal zone//
 
-
-
-
+                //for (String mode : link.getAllowedModes()) { //这行需要吗？？？
                 allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
                 allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
                 allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
 
+                if (remainingCarlinksAfterCleaning.contains(link.getId())) {
+                    allowedModesAfter.add(TransportMode.car);
+                }
+
+                //******changes in PlanA_Version1_1******
+                //加walk、bicycle
                 allowedModesAfter.add("walk");
                 allowedModesAfter.add("bicycle");
+                //加walk、bicycle//
+                //******changes in PlanA_Version1_1******//
+
+                //}
 
 
-
-
+                //for Links in pedestrian zone: Wilmersdorfer Str.
             }else if (ElongationPedestrianZoneList.contains(link.getId().toString())){
 
 
@@ -337,37 +345,34 @@ public class NetworkModifier_Plan2 {
 
 
             }else if (GreenStreetsList.contains(link.getId().toString())) {
-                //for (String mode : link.getAllowedModes()) { //这行需要吗？？？
-                    allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
-                    allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
-                    allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
 
-                    //******changes in PlanA_Version1_1******
-                    //加walk、bicycle
-                    allowedModesAfter.add("walk");
-                    allowedModesAfter.add("bicycle");
-                    //加walk、bicycle//
-                    //******changes in PlanA_Version1_1******//
 
-                //}
-                //if (remainingCarlinksAfterCleaning.contains(link.getId())) {
-                //    allowedModesAfter.add(TransportMode.car);
-                //}
-                //for Links in green streets//
+
+
+                allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
+                allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
+                allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
+
+                allowedModesAfter.add("walk");
+                allowedModesAfter.add("bicycle");
+
+
+
+
             }else {
                 //for the links not in our focused zone
 
                 //for (String mode : link.getAllowedModes()) { //这行需要吗？？？
-                    allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
-                    allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
-                    allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
+                allowedModesAfter.add("carInternal"); // This is the carInternal list, so carInternal needs to be re-added
+                allowedModesAfter.add(TransportMode.ride); // Checked: All (previous) car links were also ride links before, so re-add this mode
+                allowedModesAfter.add("freight"); // Checked: All (previous) car links were also freight links before, so re-add this mode
 
-                    //******changes in PlanA_Version1_1******
-                    //加walk、bicycle
-                    allowedModesAfter.add("walk");
-                    allowedModesAfter.add("bicycle");
-                    //加walk、bicycle//
-                    //******changes in PlanA_Version1_1******//
+                //******changes in PlanA_Version1_1******
+                //加walk、bicycle
+                allowedModesAfter.add("walk");
+                allowedModesAfter.add("bicycle");
+                //加walk、bicycle//
+                //******changes in PlanA_Version1_1******//
 
                 //}
                 if (remainingCarlinksAfterCleaning.contains(link.getId())) {
@@ -412,61 +417,61 @@ public class NetworkModifier_Plan2 {
 
 
 
-        //change NumberOfLanes and Freespeed
-        // save LinkIDs of cleaned Network as List
-        ArrayList<String> cleanedNetworkLinkIDList = new ArrayList<>();
-        for (Link link : carInternalScenario.getNetwork().getLinks().values()) {
-            cleanedNetworkLinkIDList.add(link.getId().toString());
-        }
-
-
-        //******changes in PlanA_Version1_1_fixed******
-        //——————add Lane——————
-        // for YellowStreets
-/*        for (int i = 0; i < YellowStreetsList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(YellowStreetsList.get(i))) {
-                double numberOfLanes_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getNumberOfLanes() + 1.;
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setNumberOfLanes(numberOfLanes_After_YellowStreets);
-
-                double capacity_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity() * (numberOfLanes_After_YellowStreets / (numberOfLanes_After_YellowStreets - 1));
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setCapacity(capacity_After_YellowStreets);
-                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity());
-            }
-        }*/
-        //******changes in PlanA_Version1_1******
-        // for RedStreets_Add_Lane
-        for (int i = 0; i < RedStreets_Add_LaneList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(RedStreets_Add_LaneList.get(i))) {
-                double numberOfLanes_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getNumberOfLanes() + 1.;
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setNumberOfLanes(numberOfLanes_After_RedStreets_Add_Lane);
-
-                double capacity_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity() * (numberOfLanes_After_RedStreets_Add_Lane / (numberOfLanes_After_RedStreets_Add_Lane - 1));
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setCapacity(capacity_After_RedStreets_Add_Lane);
-                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity());
-            }
-        }
-        //******changes in PlanA_Version1_1******//
-
-        //——————add Lane——————//
-        //******changes in PlanA_Version1_1_fixed******//
-
-
-        //——————SpeedModifier——————
-        // for GreenStreets
-/*        for (int i = 0; i < GreenStreetsList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(GreenStreetsList.get(i))) {
-                double freeSpeed_GreenStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).getFreespeed();
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).setFreespeed((freeSpeed_GreenStreetsList-5/3.6));
-            }
-        }*/
-        // for InternalStreets
-        for (int i = 0; i < InternalStreetsList.size(); i++) {
-            if(cleanedNetworkLinkIDList.contains(InternalStreetsList.get(i))) {
-                double freeSpeed_InternalStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).getFreespeed();
-                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).setFreespeed((freeSpeed_InternalStreetsList-5/3.6));
-            }
-        }
-        //——————SpeedModifier——————//
+//        //change NumberOfLanes and Freespeed
+//        // save LinkIDs of cleaned Network as List
+//        ArrayList<String> cleanedNetworkLinkIDList = new ArrayList<>();
+//        for (Link link : carInternalScenario.getNetwork().getLinks().values()) {
+//            cleanedNetworkLinkIDList.add(link.getId().toString());
+//        }
+//
+//
+//        //******changes in PlanA_Version1_1_fixed******
+//        //——————add Lane——————
+//        // for YellowStreets
+///*        for (int i = 0; i < YellowStreetsList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(YellowStreetsList.get(i))) {
+//                double numberOfLanes_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getNumberOfLanes() + 1.;
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setNumberOfLanes(numberOfLanes_After_YellowStreets);
+//
+//                double capacity_After_YellowStreets = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity() * (numberOfLanes_After_YellowStreets / (numberOfLanes_After_YellowStreets - 1));
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).setCapacity(capacity_After_YellowStreets);
+//                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(YellowStreetsList.get(i))).getCapacity());
+//            }
+//        }*/
+//        //******changes in PlanA_Version1_1******
+//        // for RedStreets_Add_Lane
+//        for (int i = 0; i < RedStreets_Add_LaneList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(RedStreets_Add_LaneList.get(i))) {
+//                double numberOfLanes_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getNumberOfLanes() + 1.;
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setNumberOfLanes(numberOfLanes_After_RedStreets_Add_Lane);
+//
+//                double capacity_After_RedStreets_Add_Lane = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity() * (numberOfLanes_After_RedStreets_Add_Lane / (numberOfLanes_After_RedStreets_Add_Lane - 1));
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).setCapacity(capacity_After_RedStreets_Add_Lane);
+//                System.out.println(carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(RedStreets_Add_LaneList.get(i))).getCapacity());
+//            }
+//        }
+//        //******changes in PlanA_Version1_1******//
+//
+//        //——————add Lane——————//
+//        //******changes in PlanA_Version1_1_fixed******//
+//
+//
+//        //——————SpeedModifier——————
+//        // for GreenStreets
+///*        for (int i = 0; i < GreenStreetsList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(GreenStreetsList.get(i))) {
+//                double freeSpeed_GreenStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).getFreespeed();
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(GreenStreetsList.get(i))).setFreespeed((freeSpeed_GreenStreetsList-5/3.6));
+//            }
+//        }*/
+//        // for InternalStreets
+//        for (int i = 0; i < InternalStreetsList.size(); i++) {
+//            if(cleanedNetworkLinkIDList.contains(InternalStreetsList.get(i))) {
+//                double freeSpeed_InternalStreetsList = carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).getFreespeed();
+//                carInternalScenario.getNetwork().getLinks().get(Id.createLinkId(InternalStreetsList.get(i))).setFreespeed((freeSpeed_InternalStreetsList-5/3.6));
+//            }
+//        }
+//        //——————SpeedModifier——————//
 
 
         // Write modified network to file

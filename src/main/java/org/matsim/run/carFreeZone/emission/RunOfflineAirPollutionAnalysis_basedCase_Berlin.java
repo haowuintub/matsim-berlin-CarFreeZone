@@ -58,10 +58,10 @@ import java.util.Map;
 
 public class RunOfflineAirPollutionAnalysis_basedCase_Berlin {
     //BoundingBox:
-    private static final double xMin = 4588458.659;
+/*    private static final double xMin = 4588458.659;
     private static final double yMin = 5819286.907;
     private static final double xMax = 4591789.274;
-    private static final double yMax = 5820831.663;
+    private static final double yMax = 5820831.663;*/
     //2BoundingBox:
 /*	private static final double xMin = 4586793.3515;
 	private static final double yMin = 5818514.529;
@@ -125,28 +125,28 @@ public class RunOfflineAirPollutionAnalysis_basedCase_Berlin {
         eConfig.setHbefaRoadTypeSource(HbefaRoadTypeSource.fromLinkAttributes);
         eConfig.setNonScenarioVehicles(NonScenarioVehicles.ignore);
 
-        final String emissionEventOutputFile = rootDirectory + runDirectory + runId + ".emission.events.offline.boundingbox.xml.gz";
+        final String emissionEventOutputFile = rootDirectory + runDirectory + runId + ".emission.events.offline.berlin.xml.gz";
         final String eventsFile = rootDirectory + runDirectory + runId + ".output_events.xml.gz";
 
         Scenario scenario = ScenarioUtils.loadScenario(config);
 
 
         // --- haowu shapefile1 ---
-/*		String areaShapeFile = "/Users/haowu/Workspace/QGIS/MATSim_HA2/NoCarZone_withRoundabout/NoCarZone_withRoundabout.shp";
-		Collection<SimpleFeature> features = (new ShapeFileReader()).readFileAndInitialize(areaShapeFile);
+        String areaShapeFile = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/berlin-shp/berlin.shp";
+        Collection<SimpleFeature> features = (new ShapeFileReader()).readFileAndInitialize(areaShapeFile);
 
-		Map<String, Geometry> zoneGeometries = new HashMap<>();
-		for (SimpleFeature feature : features) {
-			zoneGeometries.put((String)feature.getAttribute("Name"),(Geometry)feature.getDefaultGeometry());
-		}
+        Map<String, Geometry> zoneGeometries = new HashMap<>();
+        for (SimpleFeature feature : features) {
+            zoneGeometries.put((String)feature.getAttribute("SCHLUESSEL"),(Geometry)feature.getDefaultGeometry());
+        }
 
-		Geometry areaGeometry = zoneGeometries.get(("NoCarZone"));*/
+        Geometry areaGeometry = zoneGeometries.get(("010113"));
         // --- haowu shapefile2 ---
-        Geometry areaGeometry = new GeometryFactory().createPolygon(new Coordinate[]{
+/*        Geometry areaGeometry = new GeometryFactory().createPolygon(new Coordinate[]{
                 new Coordinate(xMin, yMin), new Coordinate(xMax, yMin),
                 new Coordinate(xMax, yMax), new Coordinate(xMin, yMax),
                 new Coordinate(xMin, yMin)
-        });
+        });*/
 
         // network
         for (Link link : scenario.getNetwork().getLinks().values()) {

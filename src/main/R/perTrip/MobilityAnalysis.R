@@ -6,14 +6,15 @@ library(lubridate)
 setwd("/Users/haowu/workspace/playground/matsim-berlin-CarFreeZone/")
 #runID="output-berlin-v5.5-1pct-baseCase_200"
 #runID="output-berlin-v5.5-1pct-policyCase1_200"
-runID="output-berlin-v5.5-1pct-policyCase2_200"
+#runID="output-berlin-v5.5-1pct-policyCase2_200"
+runID="output-berlin-v5.5-1pct-policyCase3_200"
 
 
 
 
 # ----
-#runDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "berlin-v5.5-1pct.output_trips.csv", sep = "/")
-runDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "berlin-v5.5-1pct.output_trips-berlin.csv", sep = "/")
+runDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "berlin-v5.5-1pct.output_trips.csv", sep = "/")
+#runDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "berlin-v5.5-1pct.output_trips-berlin.csv", sep = "/")
 
 
 trips <-read_delim(runDirectory,
@@ -23,7 +24,7 @@ trips <-read_delim(runDirectory,
                             col_types = cols(
                               #x = col_double(),
                               #y = col_double()
-                              #person = col_double(),
+                              person = col_character(),
                               #vehicleId = col_character(),
                               #fromLinkId = col_double(),
                               #start_x = col_double(),
@@ -122,8 +123,8 @@ joined_trips_residents_travel_distance <- joined_trips_residents_1 %>%
 
 
 #view(joined_trips_residents_1)
-view(joined_trips_residents_travel_time)
-view(joined_trips_residents_travel_distance)
+#view(joined_trips_residents_travel_time)
+#view(joined_trips_residents_travel_distance)
 #write.csv(joined_trips_residents_1,"/Users/haowu/Downloads/residents.csv", row.names = FALSE)
 
 
@@ -154,8 +155,8 @@ joined_trips_workers_travel_distance <- joined_trips_workers_1 %>%
 
 
 #view(joined_trips_workers_1)
-view(joined_trips_workers_travel_time)
-view(joined_trips_workers_travel_distance)
+#view(joined_trips_workers_travel_time)
+#view(joined_trips_workers_travel_distance)
 
 
 # ----
@@ -185,8 +186,8 @@ joined_trips_visitors_travel_distance <- joined_trips_visitors_1 %>%
 
 
 #view(joined_trips_visitors_1)
-view(joined_trips_visitors_travel_time)
-view(joined_trips_visitors_travel_distance)
+#view(joined_trips_visitors_travel_time)
+#view(joined_trips_visitors_travel_distance)
 
 
 # ----
@@ -216,8 +217,8 @@ joined_trips_passers_travel_distance <- joined_trips_passers_1 %>%
 
 
 #view(joined_trips_passers_1)
-view(joined_trips_passers_travel_time)
-view(joined_trips_passers_travel_distance)
+#view(joined_trips_passers_travel_time)
+#view(joined_trips_passers_travel_distance)
 
 
 # ----
@@ -247,8 +248,8 @@ joined_trips_nonAffectedAgents_travel_distance <- joined_trips_nonAffectedAgents
 
 
 #view(joined_trips_nonAffectedAgents_1)
-view(joined_trips_nonAffectedAgents_travel_time)
-view(joined_trips_nonAffectedAgents_travel_distance)
+#view(joined_trips_nonAffectedAgents_travel_time)
+#view(joined_trips_nonAffectedAgents_travel_distance)
 
 
 
@@ -280,8 +281,8 @@ joined_trips_allAgents_travel_distance <- joined_trips_allAgents_1 %>%
 
 
 #view(joined_trips_allAgents_1)
-view(joined_trips_allAgents_travel_time)
-view(joined_trips_allAgents_travel_distance)
+#view(joined_trips_allAgents_travel_time)
+#view(joined_trips_allAgents_travel_distance)
 
 
 
@@ -306,29 +307,50 @@ joined_trips_allAgents_travel_time_value <- as.numeric(unlist(joined_trips_allAg
 joined_trips_allAgents_travel_distance_value <- as.numeric(unlist(joined_trips_allAgents_travel_distance[1,1]))
 
 # ----
-number_residents <- count(residents, "person")
+joined_trips_residents <- joined_trips_residents  %>%
+  select(person)  %>%
+  distinct()
+number_residents <- count(joined_trips_residents, "person")
 number_residents <- as.numeric(unlist(number_residents[1,2]))
 
-number_workers <- count(workers, "person")
+joined_trips_workers <- joined_trips_workers  %>%
+  select(person)  %>%
+  distinct()
+number_workers <- count(joined_trips_workers, "person")
 number_workers <- as.numeric(unlist(number_workers[1,2]))
 
-number_visitors <- count(visitors, "person")
+joined_trips_visitors <- joined_trips_visitors  %>%
+  select(person)  %>%
+  distinct()
+number_visitors <- count(joined_trips_visitors, "person")
 number_visitors <- as.numeric(unlist(number_visitors[1,2]))
 
-number_passers <- count(passers, "person")
+joined_trips_passers <- joined_trips_passers  %>%
+  select(person)  %>%
+  distinct()
+number_passers <- count(joined_trips_passers, "person")
 number_passers <- as.numeric(unlist(number_passers[1,2]))
 
-number_nonAffectedAgents <- count(nonAffectedAgents, "person")
+joined_trips_nonAffectedAgents <- joined_trips_nonAffectedAgents  %>%
+  select(person)  %>%
+  distinct()
+number_nonAffectedAgents <- count(joined_trips_nonAffectedAgents, "person")
 number_nonAffectedAgents <- as.numeric(unlist(number_nonAffectedAgents[1,2]))
+
+joined_trips_allAgents <- joined_trips_allAgents  %>%
+  select(person)  %>%
+  distinct()
+number_allAgents <- count(joined_trips_allAgents, "person")
+number_allAgents <- as.numeric(unlist(number_allAgents[1,2]))
 
 # ----
 agent_group <- c('residents','workers','visitors','passers','nonAffectedAgents','allAgents')
-number_agent_group <- c(number_residents, number_workers, number_visitors, number_passers, number_nonAffectedAgents, 49054)
+number_agent_group <- c(number_residents, number_workers, number_visitors, number_passers, number_nonAffectedAgents, number_allAgents)
 travel_time <- c(joined_trips_residents_travel_time_value, joined_trips_workers_travel_time_value, joined_trips_visitors_travel_time_value, joined_trips_passers_travel_time_value, joined_trips_nonAffectedAgents_travel_time_value, joined_trips_allAgents_travel_time_value)
 travel_distance <- c(joined_trips_residents_travel_distance_value, joined_trips_workers_travel_distance_value, joined_trips_visitors_travel_distance_value, joined_trips_passers_travel_distance_value, joined_trips_nonAffectedAgents_travel_distance_value, joined_trips_allAgents_travel_distance_value)
 
 output_value <- data.frame(agent_group, number_agent_group, travel_time, travel_distance)
 colnames(output_value) <- c("agent_type", "number_agent_group", "travel_time", "travel_distance")
-#outputDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "MobilityAnalysis_perTrip.csv", sep = "/")
-outputDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "MobilityAnalysis_perTrip-berlin.csv", sep = "/")
+outputDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "MobilityAnalysis_perTrip.csv", sep = "/")
+#outputDirectory = paste("scenarios/berlin-v5.5-1pct/output/carFreeZone", runID, "MobilityAnalysis_perTrip-berlin.csv", sep = "/")
 write.csv(output_value, outputDirectory, row.names = FALSE)

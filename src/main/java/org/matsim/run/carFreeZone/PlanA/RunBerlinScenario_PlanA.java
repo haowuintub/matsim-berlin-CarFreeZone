@@ -141,7 +141,7 @@ public final class RunBerlinScenario_PlanA {
 				addTravelTimeBinding( TransportMode.ride ).to( networkTravelTime() );
 				addTravelDisutilityFactoryBinding( TransportMode.ride ).to( carTravelDisutilityFactoryKey() );
 				// --- Dominik ---
-				//bind(AnalysisMainModeIdentifier.class).to(OpenBerlinIntermodalPtDrtRouterModeIdentifier.class);
+				bind(AnalysisMainModeIdentifier.class).to(OpenBerlinIntermodalPtDrtRouterModeIdentifier.class);
 				// --- Dominik --- //
 				
 				//use income-dependent marginal utility of money for scoring
