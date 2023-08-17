@@ -55,7 +55,7 @@ import java.util.Map;
 /**
  * @author ikaddoura
  */
-
+@Deprecated
 public class RunOfflineAirPollutionAnalysis_basedCase_Berlin {
     //BoundingBox:
 /*    private static final double xMin = 4588458.659;
