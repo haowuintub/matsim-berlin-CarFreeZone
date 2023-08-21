@@ -125,6 +125,7 @@ public class GenerateAirPollutionSpatialPlots {
         config.transit().setVehiclesFile(null);
         config.vehicles().setVehiclesFile(null);
         config.network().setInputFile(/*runDir +*/ runId + ".output_network.xml.gz");
+        config.global().setCoordinateSystem("EPSG:31468");
         Scenario scenario = ScenarioUtils.loadScenario(config);
 
         //double binSize = 200000; // make the bin size bigger than the scenario has seconds
