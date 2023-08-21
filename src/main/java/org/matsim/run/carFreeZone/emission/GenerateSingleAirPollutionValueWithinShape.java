@@ -83,9 +83,9 @@ public class GenerateSingleAirPollutionValueWithinShape {
                     Collection<SimpleFeature> features = (new ShapeFileReader()).readFileAndInitialize(calculatedArea);
                     Map<String, Geometry> zoneGeometries = new HashMap<>();
                     for (SimpleFeature feature : features) {
-                        zoneGeometries.put((String) feature.getAttribute("key"), (Geometry) feature.getDefaultGeometry());
+                        zoneGeometries.put((String) feature.getAttribute("Name"), (Geometry) feature.getDefaultGeometry());
                     }
-                    Geometry areaGeometry = zoneGeometries.get(("1"));
+                    Geometry areaGeometry = zoneGeometries.get("drz");
 
                     // Get matsim network
                     Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
