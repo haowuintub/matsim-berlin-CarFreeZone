@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class MultipleZoneNoiseAnalysisRunner {
+public class MultipleZoneEmissionAnalysisRunner {
 
     public static void main(String[] args) throws IOException {
         // Path to the CSV file containing the postal codes (plz)
-        String csvFile = "/home/tumtse/Documents/haowu/DRZ/events_Biao/shapefiles/noise-analysis-zones/noise-analysis-zones_plz.csv";
+        String csvFile = "/home/tumtse/Documents/haowu/DRZ/events_Biao/shapefiles/emission-analysis-zones/emission-analysis-zones_plz.csv";
 
         try (CSVParser parser = new CSVParser(new FileReader(csvFile), CSVFormat.DEFAULT.withHeader())) {
             // Iterate through the rows of the CSV file
@@ -21,11 +21,11 @@ public class MultipleZoneNoiseAnalysisRunner {
                 String plz = record.get("plz");
 
                 // Prepare the arguments for calling GenerateSingleAirPollutionValueWithinShape
-                String outputFile = "/home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/emission/zonal-noise-analysis/berlin-v5.5-1pct.emission.events.offline.SingleAirPollutionValue_" + plz + ".csv";
+                String outputFile = "/home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/emission/zonal-emission-analysis/berlin-v5.5-1pct.emission.events.offline.SingleAirPollutionValue_" + plz + ".csv";
                 List<String> analysisArgs = Arrays.asList(
                         "-e", "/home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz",
                         "-o", outputFile,
-                        "-c", "/home/tumtse/Documents/haowu/DRZ/events_Biao/shapefiles/noise-analysis-zones/noise-analysis-zones.shp",
+                        "-c", "/home/tumtse/Documents/haowu/DRZ/events_Biao/shapefiles/emission-analysis-zones/emission-analysis-zones.shp",
                         "-p", plz,
                         "-n", "scenarios/berlin-v5.5-1pct/DRZ/input/network-modified-carInternal_Plan3.xml.gz"
                 );
