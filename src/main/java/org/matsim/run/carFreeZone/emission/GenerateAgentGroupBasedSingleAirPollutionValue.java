@@ -46,9 +46,14 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
     // --- haowu ---
     public static void main(String[] args) throws IOException {
 
-        // read agent groups from txt files
+        // read agent groups (residents, workers, students, visitors, passing drivers, DRZ-unrelated drivers, captured agents in Berlin) from txt files
         agentGroups.put("residents", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/personInternalIDsList.txt"));
         agentGroups.put("workers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/workerIDsList.txt"));
+        agentGroups.put("students", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/studentIDsList.txt"));
+        agentGroups.put("visitors", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/visitorIDsList.txt"));
+        agentGroups.put("passingDrivers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/passingDriverIDsList.txt"));
+        agentGroups.put("DRZ-unrelatedDrivers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/DRZ-unrelatedDriverIDsList.txt"));
+        agentGroups.put("capturedAgentsInBerlin", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/capturedAgentsInBerlinIDsList.txt"));
 
         // run the script
         var analysis = new GenerateAgentGroupBasedSingleAirPollutionValue();
@@ -158,6 +163,7 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
             }
         }
     }
+
     private static Set<Id> readAgentIds(String filePath) throws IOException {
         // Implement reading of agent IDs from a .txt file and return as a set
         Set<Id> agentIds = new HashSet<>();
