@@ -12,7 +12,7 @@ import java.io.IOException;
 public class RunEventsHandler {
     public static void main(String args[]) throws IOException {
 
-        String inputFile = "scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/berlin-v5.5-1pct.output_events.xml.gz";
+        String inputFile = "/Users/haowu/Documents/Planung_und_Betrieb_im_Verkehrswesen/Papers/carFreeZone/Invite Costas/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/berlin-v5.5-1pct.output_events.xml.gz";
         String outputFile_personInternalLinkIDsList = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/personInternalLinkIDsList.txt";
         String outputFile_workerIDsList = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/workerIDsList.txt";
         String outputFile_agentsDoingEducationIDsList = "scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/agentsDoingEducationIDsList.txt";
