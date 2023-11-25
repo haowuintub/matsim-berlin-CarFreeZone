@@ -55,7 +55,7 @@ import java.util.Map;
 /**
 * @author ikaddoura
 */
-
+@Deprecated
 public class RunOfflineAirPollutionAnalysis_Plan_BoundingBox {
 	//BoundingBox:
     private static final double xMin = 4588458.659;

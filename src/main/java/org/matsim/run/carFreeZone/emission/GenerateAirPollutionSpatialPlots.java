@@ -64,9 +64,9 @@ public class GenerateAirPollutionSpatialPlots {
     private static final double xMax = 4591789.274;
     private static final double yMax = 5820831.663;*/
     //2BoundingBox:
-	private static final double xMin = 4586793.3515;
+	private static final double xMin = 4586793.352;
 	private static final double yMin = 5818514.529;
-	private static final double xMax = 4593454.5815;
+	private static final double xMax = 4593454.582;
 	private static final double yMax = 5821604.041;
     //3BoundingBox:
 /*	private static final double xMin = 4583462.7365;
@@ -93,10 +93,9 @@ public class GenerateAirPollutionSpatialPlots {
 
     // --- haowu ---
     // Program Arguments:
-    //baseCase: -dir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/ -runId berlin-v5.5-1pct -outDir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-baseCase_200/
-    //Plan1: -dir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase1_200/ -runId berlin-v5.5-1pct -outDir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase1_200/
-    //Plan2: -dir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase2_200/ -runId berlin-v5.5-1pct -outDir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase2_200/
-    //Plan3: -dir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase3_200/ -runId berlin-v5.5-1pct -outDir scenarios/berlin-v5.5-1pct/output/carFreeZone/output-berlin-v5.5-1pct-policyCase3_200/
+    //baseCase: -dir /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/ -runId berlin-v5.5-1pct -outDir /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/emission/
+    //Plan1: -dir /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/ -runId berlin-v5.5-1pct -outDir /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/emission/
+    //Plan3: -dir /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/ -runId berlin-v5.5-1pct -outDir /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/emission/
     // --- haowu ---
 
     private GenerateAirPollutionSpatialPlots() {
@@ -125,6 +124,7 @@ public class GenerateAirPollutionSpatialPlots {
         config.transit().setVehiclesFile(null);
         config.vehicles().setVehiclesFile(null);
         config.network().setInputFile(/*runDir +*/ runId + ".output_network.xml.gz");
+        config.global().setCoordinateSystem("EPSG:31468");
         Scenario scenario = ScenarioUtils.loadScenario(config);
 
         //double binSize = 200000; // make the bin size bigger than the scenario has seconds

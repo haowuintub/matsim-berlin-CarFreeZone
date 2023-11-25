@@ -44,7 +44,7 @@ import org.matsim.vehicles.VehicleUtils;
 /**
 * @author ikaddoura
 */
-
+@Deprecated
 public class RunOfflineAirPollutionAnalysis_basedCase {
 
 	/* *********************************************************************** *
