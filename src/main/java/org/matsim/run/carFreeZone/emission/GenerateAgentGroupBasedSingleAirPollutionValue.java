@@ -39,10 +39,10 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
      */
     // --- haowu ---
     // Program Arguments:
-    //base Case: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/emission/berlin-v5.5-1pct.emission.events.offline.basecase.SingleAirPollutionValue
-    //Plan1: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/emission/berlin-v5.5-1pct.emission.events.offline.policyCase1.SingleAirPollutionValue
+    //base Case: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.basecase.SingleAirPollutionValue
+    //Plan1: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.policyCase1.SingleAirPollutionValue
 
-    //Plan3: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/emission/berlin-v5.5-1pct.emission.events.offline.policyCase3.SingleAirPollutionValue
+    //Plan3: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.policyCase3.SingleAirPollutionValue
     // --- haowu ---
     public static void main(String[] args) throws IOException {
 
