@@ -51,8 +51,8 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
         agentGroups.put("workers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/workerIDsList.txt"));
         agentGroups.put("students", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsDoingEducationIDsList.txt"));
         agentGroups.put("visitors", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsDoingOtherActivitiesIDsList.txt"));
-        agentGroups.put("passingDrivers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsWithoutActivitiesIDsList.txt"));
-        agentGroups.put("DRZUnrelatedDrivers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/nonAffectedAgentsIDsList.txt"));
+        agentGroups.put("passers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsWithoutActivitiesIDsList.txt"));
+        agentGroups.put("nonAffectedAgents", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/nonAffectedAgentsIDsList.txt"));
         agentGroups.put("capturedAgents", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/capturedAgentsIDsList.txt"));
 
         // run the script
