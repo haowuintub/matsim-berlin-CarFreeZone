@@ -32,6 +32,9 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
     @Parameter(names = {"-output", "-o"}, required = true)
     private String outputFile = "";
 
+    @Parameter(names = {"-policyCase", "-r"}, required = true)
+    private static Boolean policyCase = Boolean.valueOf("");
+
     /**
      * Run the script with command line args
      *
@@ -39,15 +42,15 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
      */
     // --- haowu ---
     // Program Arguments:
-    //base Case: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.basecase.SingleAirPollutionValue
-    //Plan1: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.policyCase1.SingleAirPollutionValue
+    //base Case: -r false -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-baseCase_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.basecase.SingleAirPollutionValue
+    //Plan1: -r true -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase1_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.policyCase1.SingleAirPollutionValue
 
-    //Plan3: -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.policyCase3.SingleAirPollutionValue
+    //Plan3: -r true -e /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/berlin-v5.5-1pct.emission.events.offline.xml.gz -o /home/tumtse/Documents/haowu/DRZ/events_Biao/output-berlin-v5.5-1pct-policyCase3_200_simple/emission/agent-group-based/berlin-v5.5-1pct.emission.events.offline.policyCase3.SingleAirPollutionValue
     // --- haowu ---
     public static void main(String[] args) throws IOException {
 
         // read agent groups (residents, workers, students, visitors, passing drivers, DRZ-unrelated drivers, captured agents in Berlin) from txt files
-        agentGroups.put("residents", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/personInternalIDsList.txt"));
+        agentGroups.put("residents", readResidentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/personInternalIDsList.txt"));
         agentGroups.put("workers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/workerIDsList.txt"));
         agentGroups.put("students", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsDoingEducationIDsList.txt"));
         agentGroups.put("visitors", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsDoingOtherActivitiesIDsList.txt"));
@@ -170,6 +173,21 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
         Scanner scanner = new Scanner(new File(filePath));
         while (scanner.hasNextLine()){
             String id = scanner.nextLine();
+            agentIds.add(Id.createPersonId(id));
+        }
+        scanner.close();
+        return agentIds;
+    }
+    private static Set<Id> readResidentIds(String filePath) throws IOException {
+        // Implement reading of agent IDs from a .txt file and return as a set
+        Set<Id> agentIds = new HashSet<>();
+        Scanner scanner = new Scanner(new File(filePath));
+        while (scanner.hasNextLine()){
+            String id = scanner.nextLine();
+            if(policyCase) {
+                // Append "_carInternal" to the id
+                String modifiedId = id + "_carInternal";
+            }
             agentIds.add(Id.createPersonId(id));
         }
         scanner.close();
