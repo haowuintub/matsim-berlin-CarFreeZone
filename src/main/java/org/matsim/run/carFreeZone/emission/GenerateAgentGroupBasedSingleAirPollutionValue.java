@@ -4,7 +4,6 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.matsim.api.core.v01.Id;
 import org.matsim.contrib.emissions.Pollutant;
 import org.matsim.contrib.emissions.events.*;
 import org.matsim.core.api.experimental.events.EventsManager;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class GenerateAgentGroupBasedSingleAirPollutionValue {
 
     // read agent groups from txt files
-    static Map<String, Set<Id>> agentGroups = new HashMap<>();
+    static Map<String, Set<String>> agentGroups = new HashMap<>();
 
     private final Map<Pollutant, Double> pollution = new HashMap<>();
 
@@ -32,8 +31,8 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
     @Parameter(names = {"-output", "-o"}, required = true)
     private String outputFile = "";
 
-    @Parameter(names = {"-policyCase", "-r"}, required = true)
-    private static Boolean policyCase = Boolean.valueOf("");
+    @Parameter(names = {"-policyCase", "-r"}, required = true, arity = 1)
+    private static boolean policyCase;
 
     /**
      * Run the script with command line args
@@ -50,7 +49,7 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
     public static void main(String[] args) throws IOException {
 
         // read agent groups (residents, workers, students, visitors, passing drivers, DRZ-unrelated drivers, captured agents in Berlin) from txt files
-        agentGroups.put("residents", readResidentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/personInternalIDsList.txt"));
+        agentGroups.put("residents", readResidentsVehicleIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/personInternalIDsList.txt"));
         agentGroups.put("workers", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/workerIDsList.txt"));
         agentGroups.put("students", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsDoingEducationIDsList.txt"));
         agentGroups.put("visitors", readAgentIds("/home/tumtse/Documents/haowu/DRZ/matsim-berlin-CarFreeZone/scenarios/berlin-v5.5-1pct/input/carFreeZone/PlanA/IDLists/berlinAgents/agentsDoingOtherActivitiesIDsList.txt"));
@@ -67,7 +66,7 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
     public void run() throws IOException {
 
         // iterate over all agent groups
-        for (Map.Entry<String, Set<Id>> agentGroup : agentGroups.entrySet()) {
+        for (Map.Entry<String, Set<String>> agentGroup : agentGroups.entrySet()) {
             // reset pollution map
             pollution.clear();
 
@@ -137,9 +136,9 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
     private static class Handler implements ColdEmissionEventHandler, WarmEmissionEventHandler {
 
         private final Map<Pollutant, Double> pollution;
-        private final Set<Id> agentIds;
+        private final Set<String> agentIds;
 
-        private Handler(Map<Pollutant, Double> pollution, Set<Id> agentIds) {
+        private Handler(Map<Pollutant, Double> pollution, Set<String> agentIds) {
             this.pollution = pollution;
             this.agentIds = agentIds;
         }
@@ -147,48 +146,46 @@ public class GenerateAgentGroupBasedSingleAirPollutionValue {
         @Override
         public void handleEvent(ColdEmissionEvent event) {
 
-            if (!agentIds.contains(event.getVehicleId())) {
-                return;
-            }
-            for (Map.Entry<Pollutant, Double> pollutant : event.getColdEmissions().entrySet()) {
-                pollution.merge(pollutant.getKey(), pollutant.getValue(), Double::sum);
+            if (agentIds.contains(event.getVehicleId().toString())) {
+                for (Map.Entry<Pollutant, Double> pollutant : event.getColdEmissions().entrySet()) {
+                    pollution.merge(pollutant.getKey(), pollutant.getValue(), Double::sum);
+                }
             }
         }
 
         @Override
         public void handleEvent(WarmEmissionEvent event) {
 
-            if (!agentIds.contains(event.getVehicleId())) {
-                return;
-            }
-            for (Map.Entry<Pollutant, Double> pollutant : event.getWarmEmissions().entrySet()) {
-                pollution.merge(pollutant.getKey(), pollutant.getValue(), Double::sum);
+            if (agentIds.contains(event.getVehicleId().toString())) {
+                for (Map.Entry<Pollutant, Double> pollutant : event.getWarmEmissions().entrySet()) {
+                    pollution.merge(pollutant.getKey(), pollutant.getValue(), Double::sum);
+                }
             }
         }
     }
 
-    private static Set<Id> readAgentIds(String filePath) throws IOException {
+    private static Set<String> readAgentIds(String filePath) throws IOException {
         // Implement reading of agent IDs from a .txt file and return as a set
-        Set<Id> agentIds = new HashSet<>();
+        Set<String> agentIds = new HashSet<>();
         Scanner scanner = new Scanner(new File(filePath));
         while (scanner.hasNextLine()){
             String id = scanner.nextLine();
-            agentIds.add(Id.createPersonId(id));
+            agentIds.add(id);
         }
         scanner.close();
         return agentIds;
     }
-    private static Set<Id> readResidentIds(String filePath) throws IOException {
+    private static Set<String> readResidentsVehicleIds(String filePath) throws IOException {
         // Implement reading of agent IDs from a .txt file and return as a set
-        Set<Id> agentIds = new HashSet<>();
+        Set<String> agentIds = new HashSet<>();
         Scanner scanner = new Scanner(new File(filePath));
-        while (scanner.hasNextLine()){
+        while (scanner.hasNextLine()) {
             String id = scanner.nextLine();
-            if(policyCase) {
+            if (policyCase) {
                 // Append "_carInternal" to the id
-                String modifiedId = id + "_carInternal";
+                id = id + "_carInternal";
             }
-            agentIds.add(Id.createPersonId(id));
+            agentIds.add(id);
         }
         scanner.close();
         return agentIds;
