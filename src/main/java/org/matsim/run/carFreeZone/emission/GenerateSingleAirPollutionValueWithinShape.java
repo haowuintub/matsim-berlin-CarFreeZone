@@ -42,8 +42,8 @@ public class GenerateSingleAirPollutionValueWithinShape {
     @Parameter(names = {"-calculated area", "-c"}, required = true)
     private String calculatedArea = "";
 
-    @Parameter(names = {"-postal-code", "-p"}, required = true)
-    private String plz = "";
+    @Parameter(names = {"-postal-code", "-p"})
+    private String plz = "0";
 
     @Parameter(names = {"-network", "-n"}, required = true)
     private String matsimNetwork = "";
