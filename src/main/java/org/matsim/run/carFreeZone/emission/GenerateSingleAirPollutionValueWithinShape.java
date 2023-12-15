@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 
 public class GenerateSingleAirPollutionValueWithinShape {
 
-    private final Map<Pollutant, Double> pollution = new HashMap<>();
-
     @Parameter(names = {"-events", "-e"}, required = true)
     private List<String> eventsFiles = new ArrayList<>();
 
